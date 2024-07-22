@@ -1,6 +1,6 @@
 package com.cydeo.enums;
 
-import lombok.AllArgsConstructor;
+
 import lombok.Getter;
 
 
