@@ -1,4 +1,4 @@
-package com.service;
+package com.cydeo.service;
 
 import com.cydeo.dto.CompanyDto;
 
