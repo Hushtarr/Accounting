@@ -1,16 +1,16 @@
 package com.cydeo.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CategoryDto {
 
     private Long id;
     private String description;
-    CompanyDto company;
+    private CompanyDto company;
     boolean hasProduct;
 }
