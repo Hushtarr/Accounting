@@ -12,5 +12,5 @@ public class CategoryDto {
     private Long id;
     private String description;
     private CompanyDto company;
-    boolean hasProduct;
+    private boolean hasProduct;
 }
