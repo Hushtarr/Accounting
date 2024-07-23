@@ -20,14 +20,19 @@ import java.time.LocalDate;
 @Table(name = "invoices")
 public class Invoice extends BaseEntity {
 
+    @Column(name = "invoice_no")
     private String invoiceNo;
 
-    @Enumerated(EnumType.STRING)
-    private InvoiceStatus invoiceStatus;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "invoice_type")
     private InvoiceType invoiceType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "invoice_status")
+    private InvoiceStatus invoiceStatus;
+
+    @Column(name = "date")
     private LocalDate date;
 
     @ManyToOne

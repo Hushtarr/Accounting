@@ -21,14 +21,14 @@ public class InvoiceDto {
 
     private InvoiceType invoiceType;
 
-    @NotNull
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 
-    @NotNull
+
     private CompanyDto company;
 
-    @NotNull
+
     private ClientVendorDto clientVendor;
 
     private BigDecimal price;
