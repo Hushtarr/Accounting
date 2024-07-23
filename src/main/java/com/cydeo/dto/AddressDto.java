@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class AddressDTO {
+public class AddressDto {
 
     private Long id;
     private String addressLine1;
