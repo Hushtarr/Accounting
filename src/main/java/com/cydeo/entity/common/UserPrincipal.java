@@ -59,4 +59,7 @@ public class UserPrincipal implements UserDetails {
     public Long getId(){
         return this.user.getId();
     }
+
+    public String getFullNameForProfile(){ return this.user.getFirstname() + " " + this.user.getFirstname(); }
+    public String getCompanyTitleForProfile(){ return this.user.getCompany().getTitle(); }
 }
