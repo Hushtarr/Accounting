@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "invoice_products")
 @Where(clause = "is_deleted=false")
@@ -29,9 +28,9 @@ public class InvoiceProduct extends BaseEntity {
     private int remainingQuantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Invoice invoiceId;
+    private Invoice invoice;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Product productId;
+    private Product product;
 
 }
