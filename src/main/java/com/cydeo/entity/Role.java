@@ -5,6 +5,7 @@ import com.cydeo.entity.common.BaseEntity;
 import javax.persistence.Entity;
 
 import lombok.*;
+
 import javax.persistence.Table;
 
 
@@ -17,5 +18,7 @@ import javax.persistence.Table;
 public class Role extends BaseEntity {
 
     private String description;
+
+
 }
 

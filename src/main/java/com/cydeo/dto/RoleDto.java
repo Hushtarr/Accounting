@@ -1,23 +1,16 @@
 package com.cydeo.dto;
 
-import com.cydeo.entity.common.BaseEntity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-
-import lombok.*;
-
-import javax.persistence.Table;
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 
 public class RoleDto {
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Entity
-    @Table(name = "roles")
-    public class Role extends BaseEntity {
 
-        private long id;
-        private String description;
-    }
+    private long id;
+    private String description;
+
 }
