@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
@@ -27,10 +28,10 @@ public class InvoiceProduct extends BaseEntity {
     private BigDecimal profitLoss;
     private int remainingQuantity;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Invoice invoiceId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Product productId;
 
 }
