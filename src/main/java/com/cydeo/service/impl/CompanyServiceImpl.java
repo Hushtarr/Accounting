@@ -1,10 +1,10 @@
-package com.service.impl;
+package com.cydeo.service.impl;
 
 import com.cydeo.dto.CompanyDto;
 import com.cydeo.entity.Company;
 import com.cydeo.repository.CompanyRepository;
 import com.cydeo.util.MapperUtil;
-import com.service.CompanyService;
+import com.cydeo.service.CompanyService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
