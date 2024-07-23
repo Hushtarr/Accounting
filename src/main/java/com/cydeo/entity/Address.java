@@ -22,15 +22,17 @@ public class Address {
     private String zipCode;
 
     // Constructors
-    public Address() {}
+    public Address() {
+    }
 
     public Address(String addressLine1, String addressLine2, String city, String state, String country, String zipCode) {
-        this.addressLine1 = addressLine1;
-        this.addressLine2 = addressLine2;
-        this.city = city;
-        this.state = state;
-        this.country = country;
-        this.zipCode = zipCode;
+
+        setAddressLine1(addressLine1);
+        setAddressLine2(addressLine2);
+        setCity(city);
+        setState(state);
+        setCountry(country);
+        setZipCode(zipCode);
     }
 
     // Getters and Setters
