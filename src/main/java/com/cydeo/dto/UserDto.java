@@ -21,6 +21,4 @@ public class UserDto {
     private CompanyDto company;
     private boolean isOnlyAdmin;
 
-
-
 }
