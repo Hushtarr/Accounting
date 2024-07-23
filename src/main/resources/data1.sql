@@ -99,8 +99,8 @@
 --         'Orange Tech', '+1 (215) 846-4568', 'https://www.orangetech.com', 5, 'PASSIVE'),
 --        ('2023-04-15 00:00:00', 1, false, '2023-04-15 00:00:00', 1,
 --         'Active Tech', '+1 (215) 245-3687', 'https://www.activetech.com', 6, 'PASSIVE');
---
---
+
+
 -- insert into clients_vendors(insert_date_time, insert_user_id, is_deleted, last_update_date_time, last_update_user_id,
 --                             client_vendor_type, client_vendor_name, phone, website, address_id, company_id)
 -- values
@@ -122,8 +122,7 @@
 --  'https://www.keytech.com', 1, 3),
 -- ('2023-04-15T00:00', 3, false, '2023-04-15T00:00', 3, 'VENDOR', 'Mod Tech', '+1 (652) 852-3648',
 --  'https://www.modtech.com', 2, 3);
---
---
+
 -- insert into categories(insert_date_time, insert_user_id, is_deleted, last_update_date_time, last_update_user_id,
 --                        description, company_id)
 -- values
