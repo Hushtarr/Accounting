@@ -23,13 +23,13 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public CompanyDto findById(Long id) {
-        Company company = companyRepository.findByIdAndIsDeleted(id,false);
+        Company company = companyRepository.findById(id).orElseThrow();
         return mapperUtil.convert(company, new CompanyDto());
     }
 
     @Override
     public List<CompanyDto> listAllCompany() {
-        List<Company> companyList = companyRepository.findAllByIsDeleted(false);
+        List<Company> companyList = companyRepository.findAll();
         return companyList.stream().map(company -> mapperUtil.convert(company, new CompanyDto())).collect(Collectors.toList());
     }
 
