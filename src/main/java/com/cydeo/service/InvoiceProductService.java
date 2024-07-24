@@ -10,4 +10,6 @@ public interface InvoiceProductService {
 
     InvoiceProductDto findById(Long id);
 
+    List<InvoiceProductDto> listAllByInvoiceId(Long id);
+
 }
