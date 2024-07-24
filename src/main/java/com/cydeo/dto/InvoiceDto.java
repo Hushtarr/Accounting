@@ -17,6 +17,8 @@ public class InvoiceDto {
 
     private Long id;
 
+    private String invoiceNo;
+
     private InvoiceStatus invoiceStatus;
 
     private InvoiceType invoiceType;
