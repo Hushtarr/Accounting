@@ -3,12 +3,12 @@ package com.cydeo.enums;
 public enum ProductUnit {
     LBS("Libre"), GALLON("Gallon"), PCS("Pieces"), KG("Kilogram"), METER("Meter"), INCH("Inch"), FEET("Feet");
 
-    private final String unit;
+    private final String value;
 
-    ProductUnit(String unit) {
-        this.unit = unit;
+    ProductUnit(String value) {
+        this.value = value;
     }
-    public String getUnit() {
-        return unit;
+    public String getValue() {
+        return value;
     }
 }
