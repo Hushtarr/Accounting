@@ -55,8 +55,8 @@ public class UserController {
 
         model.addAttribute("userRoles", userService.findAll());
         model.addAttribute("companies", companyService.listAllCompany());
-    }
 
+    }
 
 
 }
