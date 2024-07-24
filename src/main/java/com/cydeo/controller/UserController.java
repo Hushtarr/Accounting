@@ -54,7 +54,7 @@ public class UserController {
     public void commonAttributes(Model model) {
 
         model.addAttribute("userRoles", userService.findAll());
-        model.addAttribute("companies",companyService.listAllCompany());
+        model.addAttribute("companies", companyService.listAllCompany());
     }
 
 
