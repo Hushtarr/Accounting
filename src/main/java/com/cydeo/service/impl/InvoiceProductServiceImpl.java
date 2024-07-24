@@ -1,6 +1,7 @@
 package com.cydeo.service.impl;
 
 import com.cydeo.dto.InvoiceProductDto;
+import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.util.MapperUtil;
@@ -22,6 +23,21 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     @Override
     public List<InvoiceProductDto> listAllInvoiceProducts() {
         return repository.findAll().stream()
+                .map(invoiceProduct -> mapperUtil.convert(invoiceProduct, new InvoiceProductDto()))
+                .toList();
+    }
+
+    @Override
+    public InvoiceProductDto findById(Long id) {
+
+        InvoiceProduct foundInvoiceProduct = repository.findById(id).orElseThrow(IllegalArgumentException::new);
+
+        return mapperUtil.convert(foundInvoiceProduct, new InvoiceProductDto());
+    }
+
+    @Override
+    public List<InvoiceProductDto> listAllByInvoiceId(Long id) {
+        return repository.findAllByInvoiceId(id).stream()
                 .map(invoiceProduct -> mapperUtil.convert(invoiceProduct, new InvoiceProductDto()))
                 .toList();
     }
