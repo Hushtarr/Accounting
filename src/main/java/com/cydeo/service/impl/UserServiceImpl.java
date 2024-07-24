@@ -6,6 +6,8 @@ import com.cydeo.repository.UserRepository;
 import com.cydeo.service.UserService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -23,4 +25,32 @@ public class UserServiceImpl implements UserService {
         User user= userRepository.findByUsername(username);
         return mapperUtil.convert(user, new UserDto());
     }
+
+    @Override
+    public void save(UserDto userDto) {
+        User user = mapperUtil.convert(userDto, new User());
+        userRepository.save(user);
+    }
+
+    @Override
+    public void update(UserDto userDto) {
+        User user = mapperUtil.convert(userDto, new User());
+        userRepository.save(user);
+    }
+
+    @Override
+    public UserDto findById(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        return mapperUtil.convert(user, new UserDto());
+    }
+
+    @Override
+    public List<UserDto> findAll() {
+        return userRepository.findAll().stream()
+                .map(user -> mapperUtil.convert(user, new UserDto()))
+                .collect(Collectors.toList());
+    }
+
+
+
 }
