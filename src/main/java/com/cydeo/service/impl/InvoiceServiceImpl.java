@@ -51,4 +51,15 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto()))
                 .toList();
     }
+
+    @Override
+    public List<InvoiceDto> listPurchaseInvoicesByCompany() {
+        UserDto userDto = securityService.getLoggedInUser();
+        String companyTitle = userDto.getCompany().getTitle();
+
+        return repository.findByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.PURCHASE, companyTitle)
+                .stream()
+                .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto()))
+                .toList();
+    }
 }

@@ -9,4 +9,5 @@ public interface InvoiceService {
     List<InvoiceDto> listAllInvoices();
     InvoiceDto findById(Long id);
     List<InvoiceDto> listSalesInvoicesByCompany();
+    List<InvoiceDto> listPurchaseInvoicesByCompany();
 }
