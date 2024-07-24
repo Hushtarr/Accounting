@@ -26,7 +26,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public CompanyDto findById(Long id) {
-        Company company = companyRepository.findById(id).orElseThrow();
+        Company company = companyRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         return mapperUtil.convert(company, new CompanyDto());
     }
 
