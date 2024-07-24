@@ -6,8 +6,9 @@ import com.cydeo.repository.UserRepository;
 import com.cydeo.service.UserService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -22,7 +23,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findByUsername(String username) {
-        User user= userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username);
         return mapperUtil.convert(user, new UserDto());
     }
 
@@ -40,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findById(Long id) {
-        User user = userRepository.findById(id).orElse(null);
+        User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         return mapperUtil.convert(user, new UserDto());
     }
 
@@ -48,9 +49,8 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> findAll() {
         return userRepository.findAll().stream()
                 .map(user -> mapperUtil.convert(user, new UserDto()))
-                .collect(Collectors.toList());
+                .toList();
     }
-
 
 
 }
