@@ -9,4 +9,6 @@ public interface CompanyService {
     CompanyDto findById(Long id);
 
     List<CompanyDto> listAllCompany();
+
+    CompanyDto getCompanyDtoByLoggedInUser();
 }
