@@ -19,8 +19,6 @@ public class InvoiceProductDTOConverter implements Converter<String, InvoiceProd
 
         if (source == null || source.isEmpty()) return null;
 
-        //Long id = Long.parseLong(source);
-
-        return null;
+        return invoiceProductService.findById(Long.parseLong(source));
     }
 }
