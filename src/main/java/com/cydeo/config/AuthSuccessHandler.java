@@ -23,10 +23,10 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
             response.sendRedirect("users/list");
         }
         if(roles.contains("Manager")){
-            response.sendRedirect("/dashboard");
+            response.sendRedirect("/dashboard/");
         }
         if(roles.contains("Employee")){
-            response.sendRedirect("/dashboard");
+            response.sendRedirect("/dashboard/");
         }
 
     }
