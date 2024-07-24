@@ -29,4 +29,12 @@ public class SalesInvoiceController {
 
         return "/invoice/invoice_print";
     }
+
+    @GetMapping("/list")
+    public String listSalesInvoice(Model model){
+
+        model.addAttribute("invoices", invoiceService.listSalesInvoicesByCompany());
+
+        return "/invoice/sales-invoice-list";
+    }
 }
