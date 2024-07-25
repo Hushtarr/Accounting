@@ -6,6 +6,7 @@ import com.cydeo.enums.CompanyStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -14,6 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "companies")
+@Where(clause = "is_deleted=false")
 public class Company extends BaseEntity {
 
     @Column(unique = true, nullable = false)// unique title, title cannot be null
