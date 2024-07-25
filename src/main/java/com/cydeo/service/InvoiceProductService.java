@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface InvoiceProductService {
 
-    List<InvoiceProductDto> listAllInvoiceProducts();
 
     InvoiceProductDto findById(Long id);
 

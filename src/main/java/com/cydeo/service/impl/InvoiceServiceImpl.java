@@ -26,12 +26,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.securityService = securityService;
     }
 
-    @Override
-    public List<InvoiceDto> listAllInvoices() {
-        return invoiceRepository.findAll().stream()
-                .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto()))
-                .toList();
-    }
 
     @Override
     public InvoiceDto findById(Long id) {
