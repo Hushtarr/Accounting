@@ -40,5 +40,11 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = productRepository.findAll();
         return products.stream().map(product -> mapperUtil.convert(product,new ProductDto())).collect(Collectors.toList());
     }
+
+    @Override
+    public List<ProductDto> findAllInStock() {
+        List<Product> productsInStock = productRepository.findByQuantityInStockGreaterThan(0);
+        return productsInStock.stream().map(product -> mapperUtil.convert(product, new ProductDto())).collect(Collectors.toList());
+    }
 }
 
