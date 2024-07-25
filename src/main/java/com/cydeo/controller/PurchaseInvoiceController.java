@@ -37,14 +37,19 @@ public class PurchaseInvoiceController {
     }
 
 
-
     @GetMapping("/delete/{id}")
     public String deleteInvoice(@PathVariable("id") Long id) {
          invoiceService.delete(id);
          return "redirect:/invoice/purchase-invoice-create";
     }
 
+    @GetMapping("/list")
+    public String listPurchaseInvoice(Model model){
 
+        model.addAttribute("invoices", invoiceService.listPurchaseInvoicesByCompany());
+
+        return "/invoice/purchase-invoice-list";
     }
+}
 
 

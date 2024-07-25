@@ -11,4 +11,7 @@ public interface InvoiceService {
     List<InvoiceDto> listSalesInvoicesByCompany();
 
     void delete(Long id);
+
+    List<InvoiceDto> listPurchaseInvoicesByCompany();
+
 }
