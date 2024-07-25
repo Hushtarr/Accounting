@@ -41,5 +41,14 @@ public class CompanyServiceImpl implements CompanyService {
         return securityService.getLoggedInUser().getCompany();
     }
 
+    @Override
+    public List<CompanyDto> findAllAndSorted() {
+
+        return companyRepository.findAllExcludingCompanySortedByStatusAndTitle()
+                .stream()
+                .map(company -> mapperUtil.convert(company, new CompanyDto())).collect(Collectors.toList());
+
+    }
+
 
 }
