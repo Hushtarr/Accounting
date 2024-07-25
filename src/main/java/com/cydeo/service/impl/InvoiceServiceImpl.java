@@ -26,12 +26,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.securityService = securityService;
     }
 
-    @Override
-    public List<InvoiceDto> listAllInvoices() {
-        return invoiceRepository.findAll().stream()
-                .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto()))
-                .toList();
-    }
 
     @Override
     public InvoiceDto findById(Long id) {
@@ -42,38 +36,25 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public List<InvoiceDto> listSalesInvoicesByCompany() {
-
+    public List<InvoiceDto> listAllByTypeAndCompany(InvoiceType invoiceType) {
         UserDto userDto = securityService.getLoggedInUser();
         String companyTitle = userDto.getCompany().getTitle();
-
-        return invoiceRepository.findByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.SALES, companyTitle)
+        return invoiceRepository.findByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(invoiceType, companyTitle)
                 .stream()
                 .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto()))
                 .toList();
     }
 
-    @Override
-    public List<InvoiceDto> listPurchaseInvoicesByCompany() {
-        UserDto userDto = securityService.getLoggedInUser();
-        String companyTitle = userDto.getCompany().getTitle();
-
-        return invoiceRepository.findByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.PURCHASE, companyTitle)
-                .stream()
-                .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto()))
-                .toList();
-    }
 
     @Override
     public void delete(Long id) {
 
-        Optional<Invoice> invoice = repository.findById(id);
+        Optional<Invoice> invoice = invoiceRepository.findById(id);
 
         if (invoice.isPresent()){
             invoice.get().setIsDeleted(true);
-            repository.save(invoice.get());
+            invoiceRepository.save(invoice.get());
         }
-
 
     }
 }
