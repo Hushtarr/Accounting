@@ -10,4 +10,6 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     List<Invoice> findByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType invoiceType, String title);
 
+    Invoice findByInvoiceType(InvoiceType invoiceType);
+
 }

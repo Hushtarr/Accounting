@@ -1,5 +1,6 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.converter.InvoiceDTOConverter;
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.Invoice;
@@ -18,6 +19,8 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository repository;
     private final MapperUtil mapperUtil;
     private final SecurityService securityService;
+
+
 
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository, MapperUtil mapperUtil, SecurityService securityService) {
         this.repository = invoiceRepository;
@@ -50,5 +53,14 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .stream()
                 .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto()))
                 .toList();
+    }
+
+    @Override
+    public void update(InvoiceDto invoice) {
+        Invoice invoice1 = repository.findByInvoiceType(invoice.getInvoiceType());
+        Invoice convertedInvoice = mapperUtil.convert(invoice, new Invoice());
+        convertedInvoice.setId(invoice1.getId());
+        repository.save(convertedInvoice);
+
     }
 }
