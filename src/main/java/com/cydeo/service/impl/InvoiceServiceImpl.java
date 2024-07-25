@@ -42,27 +42,15 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public List<InvoiceDto> listSalesInvoicesByCompany() {
-
+    public List<InvoiceDto> listAllByTypeAndCompany(InvoiceType invoiceType) {
         UserDto userDto = securityService.getLoggedInUser();
         String companyTitle = userDto.getCompany().getTitle();
-
-        return invoiceRepository.findByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.SALES, companyTitle)
+        return invoiceRepository.findByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(invoiceType, companyTitle)
                 .stream()
                 .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto()))
                 .toList();
     }
 
-    @Override
-    public List<InvoiceDto> listPurchaseInvoicesByCompany() {
-        UserDto userDto = securityService.getLoggedInUser();
-        String companyTitle = userDto.getCompany().getTitle();
-
-        return invoiceRepository.findByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.PURCHASE, companyTitle)
-                .stream()
-                .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto()))
-                .toList();
-    }
 
     @Override
     public void delete(Long id) {

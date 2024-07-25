@@ -2,6 +2,7 @@ package com.cydeo.controller;
 
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.entity.InvoiceProduct;
+import com.cydeo.enums.InvoiceType;
 import com.cydeo.service.ClientVendorService;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
@@ -46,7 +47,7 @@ public class PurchaseInvoiceController {
     @GetMapping("/list")
     public String listPurchaseInvoice(Model model){
 
-        model.addAttribute("invoices", invoiceService.listPurchaseInvoicesByCompany());
+        model.addAttribute("invoices", invoiceService.listAllByTypeAndCompany(InvoiceType.PURCHASE));
 
         return "/invoice/purchase-invoice-list";
     }
