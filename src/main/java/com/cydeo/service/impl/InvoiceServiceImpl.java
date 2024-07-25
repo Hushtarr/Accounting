@@ -11,6 +11,7 @@ import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
@@ -61,5 +62,18 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .stream()
                 .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto()))
                 .toList();
+    }
+
+    @Override
+    public void delete(Long id) {
+
+        Optional<Invoice> invoice = repository.findById(id);
+
+        if (invoice.isPresent()){
+            invoice.get().setIsDeleted(true);
+            repository.save(invoice.get());
+        }
+
+
     }
 }
