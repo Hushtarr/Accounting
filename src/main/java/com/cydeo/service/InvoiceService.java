@@ -10,4 +10,6 @@ public interface InvoiceService {
     InvoiceDto findById(Long id);
     List<InvoiceDto> listSalesInvoicesByCompany();
     List<InvoiceDto> listPurchaseInvoicesByCompany();
+
+    InvoiceDto save(InvoiceDto invoiceDto);
 }

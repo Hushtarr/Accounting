@@ -62,4 +62,12 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto()))
                 .toList();
     }
+
+    @Override
+    public InvoiceDto save(InvoiceDto invoiceDto) {
+        invoiceRepository.save(mapperUtil.convert(invoiceDto, new Invoice()));
+        return invoiceDto;
+    }
+
+
 }
