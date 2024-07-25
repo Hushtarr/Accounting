@@ -3,6 +3,7 @@ package com.cydeo.controller;
 import com.cydeo.dto.UserDto;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.UserService;
+import com.cydeo.service.RoleService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,15 +14,18 @@ public class UserController {
 
     private final UserService userService;
     private final CompanyService companyService;
+    private final RoleService roleService;
 
-    public UserController(UserService userService, CompanyService companyService) {
+    public UserController(UserService userService, CompanyService companyService, RoleService roleService) {
         this.userService = userService;
         this.companyService = companyService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/create")
     public String createUserForm(Model model) {
         model.addAttribute("newUser", new UserDto());
+        model.addAttribute("userRoles", roleService.findAll());
         return "/user/user-create";
     }
 
@@ -35,6 +39,7 @@ public class UserController {
     public String editUserForm(@PathVariable("id") Long id, Model model) {
         UserDto userDto = userService.findById(id);
         model.addAttribute("user", userDto);
+        model.addAttribute("userRoles", roleService.findAll());
         return "/user/user-update";
     }
 
