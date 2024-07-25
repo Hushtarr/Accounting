@@ -67,13 +67,12 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public void delete(Long id) {
 
-        Optional<Invoice> invoice = repository.findById(id);
+        Optional<Invoice> invoice = invoiceRepository.findById(id);
 
         if (invoice.isPresent()){
             invoice.get().setIsDeleted(true);
-            repository.save(invoice.get());
+            invoiceRepository.save(invoice.get());
         }
-
 
     }
 }
