@@ -11,4 +11,6 @@ public interface CompanyService {
     List<CompanyDto> listAllCompany();
 
     CompanyDto getCompanyDtoByLoggedInUser();
+
+    List<CompanyDto> findAllAndSorted();
 }
