@@ -4,6 +4,7 @@ import com.cydeo.enums.CompanyStatus;
 import lombok.*;
 import org.hibernate.validator.constraints.UniqueElements;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -30,6 +31,8 @@ public class CompanyDto {
     @Pattern(regexp = "^(https?:\\/\\/)?([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}(:\\d{1,5})?(\\/[a-zA-Z0-9\\.\\,\\?\\'\\/\\\\\\+&%\\$#_=~\\-]*)?$\n", message = "Website should have a valid format")
     private String website;
 
+    @Valid
+    @NotNull
     private AddressDto address;
     private CompanyStatus companyStatus;
 }
