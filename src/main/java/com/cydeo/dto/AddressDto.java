@@ -17,27 +17,27 @@ public class AddressDto {
 
     private Long id;
 
-    @NotBlank (message = "This is a required field")
-    @Size(min = 2, max = 100, message = "Address should have 2-100 characters long")
+    @NotBlank(message = "Address is required field.")
+    @Size(min = 2,max = 100,message = "Address should have 2-100 characters long.")
     private String addressLine1;
 
-    @Size(min=2, max= 100, message = "Address should have maximum 100 characters long")
+    @Size(max = 100,message = "Address should have maximum 100 characters long.")
     private String addressLine2;
 
-    @NotBlank(message = "This is a required field")
-    @Size(min = 2, max = 50, message = "City should have 2-50 characters long")
+    @NotBlank(message = "City is a required field.")
+    @Size(min = 2,max = 50,message = "City should have 2-50 characters long.")
     private String city;
 
-    @NotBlank(message = "This is a required field")
-    @Size(min = 2, max = 50, message = "State should have 2-50 characters long")
+    @NotBlank(message = "State is a required field.")
+    @Size(min = 2,max = 50,message = "State should have 2-50 characters long.")
     private String state;
 
-    @NotBlank(message = "This is a required field")
-    @Size(min = 2, max = 50, message = "Country should have 2-50 characters long")
+    @NotBlank(message = "Country is a required field.")
+    @Size(min = 2,max = 50,message = "Country should have 2-50 characters long.")
     private String country;
 
-    @NotBlank(message = "This is a required field")
-    @Pattern(regexp = "^\\d{5}-\\d{4}$", message = "Zipcode should be in this format: 'xxxxx-xxxx'")
+    @NotBlank(message = "Zipcode should have a valid form.")
+    @Pattern(regexp = "^\\d{5}-\\d{4}$")
     private String zipCode;
 
 }

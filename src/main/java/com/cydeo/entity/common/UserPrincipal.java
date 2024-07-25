@@ -11,7 +11,7 @@ import java.util.List;
 
 public class UserPrincipal implements UserDetails {
 
-    private User user;
+    private final User user;
 
     public UserPrincipal(User user) {
         this.user = user;
@@ -60,6 +60,6 @@ public class UserPrincipal implements UserDetails {
         return this.user.getId();
     }
 
-    public String getFullNameForProfile(){ return this.user.getFirstname() + " " + this.user.getFirstname(); }
+    public String getFullNameForProfile(){ return this.user.getFirstname() + " " + this.user.getLastname(); }
     public String getCompanyTitleForProfile(){ return this.user.getCompany().getTitle(); }
 }

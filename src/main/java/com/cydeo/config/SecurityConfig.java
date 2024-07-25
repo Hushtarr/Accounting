@@ -21,34 +21,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeRequests()
-                .antMatchers("/companies/**").hasAuthority("Root User")
-                .antMatchers("/users/**").hasAuthority("Root User")
-                .antMatchers("/users/**").hasAuthority("Admin")
-                .antMatchers("/clientVendors/**").hasAuthority("Admin")
-                .antMatchers("/categories/**").hasAuthority("Admin")
-                .antMatchers("/products/**").hasAuthority("Admin")
-                .antMatchers("/purchaseInvoices/**").hasAuthority("Admin")
-                .antMatchers("/salesInvoices/**").hasAuthority("Admin")
-                .antMatchers("/reports/**").hasAuthority("Admin")
-                .antMatchers("/dashboard").hasAuthority("Manager")
-                .antMatchers("/clientVendors/**").hasAuthority("Manager")
-                .antMatchers("/categories/**").hasAuthority("Manager")
-                .antMatchers("/products/**").hasAuthority("Manager")
-                .antMatchers("/purchaseInvoices/**").hasAuthority("Manager")
-                .antMatchers("/salesInvoices/**").hasAuthority("Manager")
-                .antMatchers("/reports/**").hasAuthority("Manager")
-                .antMatchers("/dashboard").hasAuthority("Employee")
-                .antMatchers("/clientVendors/**").hasAuthority("Employee")
-                .antMatchers("/categories/**").hasAuthority("Employee")
-                .antMatchers("/products/**").hasAuthority("Employee")
-                .antMatchers("/purchaseInvoices/**").hasAuthority("Employee")
-                .antMatchers("/salesInvoices/**").hasAuthority("Employee")
-
-                .antMatchers("/","/login",
-                        "/fragments/**",
-                        "/assets/**",
-                        "/images/**")
-                .permitAll()
+                .antMatchers("/users/**").hasAnyAuthority("Root User", "Admin")
+                .antMatchers("/companies/**").hasAnyAuthority("Root User")
+                .antMatchers("/", "/login", "/fragments/**", "/assets/**", "/img/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

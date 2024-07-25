@@ -15,19 +15,19 @@ import java.util.List;
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
 
-    private final InvoiceRepository repository;
+    private final InvoiceRepository invoiceRepository;
     private final MapperUtil mapperUtil;
     private final SecurityService securityService;
 
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository, MapperUtil mapperUtil, SecurityService securityService) {
-        this.repository = invoiceRepository;
+        this.invoiceRepository = invoiceRepository;
         this.mapperUtil = mapperUtil;
         this.securityService = securityService;
     }
 
     @Override
     public List<InvoiceDto> listAllInvoices() {
-        return repository.findAll().stream()
+        return invoiceRepository.findAll().stream()
                 .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto()))
                 .toList();
     }
@@ -35,7 +35,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceDto findById(Long id) {
 
-        Invoice foundInvoice = repository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Invoice foundInvoice = invoiceRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
         return mapperUtil.convert(foundInvoice, new InvoiceDto());
     }
@@ -46,7 +46,18 @@ public class InvoiceServiceImpl implements InvoiceService {
         UserDto userDto = securityService.getLoggedInUser();
         String companyTitle = userDto.getCompany().getTitle();
 
-        return repository.findByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.SALES, companyTitle)
+        return invoiceRepository.findByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.SALES, companyTitle)
+                .stream()
+                .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto()))
+                .toList();
+    }
+
+    @Override
+    public List<InvoiceDto> listPurchaseInvoicesByCompany() {
+        UserDto userDto = securityService.getLoggedInUser();
+        String companyTitle = userDto.getCompany().getTitle();
+
+        return invoiceRepository.findByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.PURCHASE, companyTitle)
                 .stream()
                 .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto()))
                 .toList();

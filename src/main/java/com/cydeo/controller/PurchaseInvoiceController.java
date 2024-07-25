@@ -30,4 +30,13 @@ public class PurchaseInvoiceController {
 
         return "/invoice/invoice_print";
     }
+
+    @GetMapping("/list")
+    public String listPurchaseInvoice(Model model){
+
+        model.addAttribute("invoices", invoiceService.listPurchaseInvoicesByCompany());
+
+        return "/invoice/purchase-invoice-list";
+    }
 }
+
