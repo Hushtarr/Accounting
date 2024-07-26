@@ -17,5 +17,5 @@ public class ProductDto {
     private Integer lowLimitAlert;
     private ProductUnit productUnit;
     private CategoryDto category;
-    private boolean hasProduct;
+    private boolean hasInvoiceProduct;
 }
