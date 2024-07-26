@@ -6,8 +6,20 @@ import com.cydeo.enums.InvoiceType;
 import com.cydeo.service.ClientVendorService;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
+import com.cydeo.dto.InvoiceDto;
+import com.cydeo.dto.InvoiceProductDto;
+import com.cydeo.dto.ProductDto;
+import com.cydeo.dto.UserDto;
+import com.cydeo.entity.Product;
+import com.cydeo.entity.User;
+import com.cydeo.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -17,11 +29,15 @@ public class SalesInvoiceController {
     private final InvoiceService invoiceService;
     private final InvoiceProductService invoiceProductService;
     private final ClientVendorService clientVendorService;
+    private final ProductService productService;
+    private final SecurityService securityService;
 
-    public SalesInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService) {
+    public SalesInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService, ProductService productService, SecurityService securityService) {
         this.invoiceService = invoiceService;
         this.invoiceProductService = invoiceProductService;
         this.clientVendorService = clientVendorService;
+        this.productService = productService;
+        this.securityService = securityService;
     }
 
 
@@ -60,4 +76,61 @@ public class SalesInvoiceController {
 
         return "/invoice/sales-invoice-list";
     }
+
+    @GetMapping("/update/{id}")
+    public String editSalesInvoice(@PathVariable("id") Long id, Model model) {
+
+        model.addAttribute("invoice", invoiceService.findById(id));
+        model.addAttribute("newInvoiceProduct", new InvoiceProductDto());
+        model.addAttribute("invoiceProducts", invoiceProductService.listAllByInvoiceId(id));
+
+        return "/invoice/sales-invoice-update";
+
+    }
+
+    @PostMapping("/addInvoiceProduct/{id}")
+    public String addInvoiceProduct(@ModelAttribute("newInvoiceProduct") @Valid InvoiceProductDto invoiceProductDto, @PathVariable("id") Long id, Model model) {
+
+        invoiceProductDto.setInvoice(invoiceService.findById(id));
+
+        invoiceProductService.save(invoiceProductDto);
+        model.addAttribute("invoice", invoiceService.findById(id));
+        model.addAttribute("newInvoiceProduct", new InvoiceProductDto());
+        model.addAttribute("invoiceProducts", invoiceProductService.listAllByInvoiceId(id));
+
+        return "/invoice/sales-invoice-update";
+
+    }
+
+    @GetMapping("/removeInvoiceProduct/{invoiceId}/{invoiceProuductId}")
+    public String removeInvoiceProduct(@PathVariable("invoiceId") Long invoiceId,
+                                       @PathVariable("invoiceProuductId") Long invoiceProductId, Model model) {
+
+        invoiceProductService.deleteById(invoiceProductId);
+
+        model.addAttribute("invoice", invoiceService.findById(invoiceId));
+        model.addAttribute("newInvoiceProduct", new InvoiceProductDto());
+        model.addAttribute("invoiceProducts", invoiceProductService.listAllByInvoiceId(invoiceId));
+
+        return "/invoice/sales-invoice-update";
+
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateSalesInvoice( @ModelAttribute("invoice") InvoiceDto invoiceDto,
+                                      @PathVariable("id") Long id, Model model) {
+
+        invoiceService.update(invoiceDto);
+
+        return "redirect:/salesInvoices/list";
+
+    }
+
+    @ModelAttribute
+    public void commonAttributes(Model model) {
+        UserDto currentUser = securityService.getLoggedInUser();
+        model.addAttribute("clients", clientVendorService.listAllClientVendorsByType(ClientVendorType.CLIENT));
+        model.addAttribute("products", productService.listAllProductsByCompanyId(currentUser.getCompany().getId()));
+    }
+
 }

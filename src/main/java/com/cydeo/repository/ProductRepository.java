@@ -8,12 +8,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
+@Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     //product entity doesnt include a "company" field. bcs of that we need to filter products by using native query
     @Query("SELECT p FROM Product p WHERE p.category.company.id = :companyId ORDER BY p.category.description ASC, p.name ASC")
     List<Product> findByCompanyIdOrderByCategoryDescriptionAndProductNameAsc(@Param("companyId") Long companyId);
 
+    List<Product> findAllByCategory_Company_Id(Long id);
 
 }
