@@ -1,15 +1,18 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.Invoice;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.repository.InvoiceRepository;
+import com.cydeo.service.CompanyService;
 import com.cydeo.service.InvoiceService;
 import com.cydeo.service.SecurityService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,10 +23,13 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final MapperUtil mapperUtil;
     private final SecurityService securityService;
 
-    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, MapperUtil mapperUtil, SecurityService securityService) {
+    private final CompanyService companyService;
+
+    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, MapperUtil mapperUtil, SecurityService securityService, CompanyService companyService) {
         this.invoiceRepository = invoiceRepository;
         this.mapperUtil = mapperUtil;
         this.securityService = securityService;
+        this.companyService = companyService;
     }
 
 
@@ -45,6 +51,33 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .toList();
     }
 
+    @Override
+    public InvoiceDto generateInvoiceForCompanyByType(InvoiceType invoiceType){
+
+        InvoiceDto invoiceDto = new InvoiceDto();
+        invoiceDto.setInvoiceType(invoiceType);
+        CompanyDto companyDto = companyService.getCompanyDtoByLoggedInUser();
+        invoiceDto.setCompany(companyDto);
+
+        String prefix = "";
+        int currentInvNum = 0;
+
+        List<InvoiceDto> invoiceDtoList = listAllByTypeAndCompany(invoiceType);
+
+        if(invoiceType == InvoiceType.SALES) prefix = "S";
+        else prefix = "P";
+
+        if(invoiceDtoList.isEmpty()) currentInvNum = 1;
+        else {
+            String numPart = invoiceDtoList.get(0).getInvoiceNo().substring(2);
+            currentInvNum = Integer.parseInt(numPart)+1;
+        }
+
+        invoiceDto.setInvoiceNo(String.format("%s-%03d", prefix, currentInvNum));
+        invoiceDto.setDate(LocalDateTime.now());
+        return invoiceDto;
+    }
+
 
     @Override
     public void delete(Long id) {
@@ -57,4 +90,5 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
 
     }
+
 }
