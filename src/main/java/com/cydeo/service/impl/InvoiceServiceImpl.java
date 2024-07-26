@@ -59,8 +59,8 @@ public class InvoiceServiceImpl implements InvoiceService {
         CompanyDto companyDto = companyService.getCompanyDtoByLoggedInUser();
         invoiceDto.setCompany(companyDto);
 
-        String prefix = "";
-        int currentInvNum = 0;
+        String prefix;
+        int currentInvNum;
 
         List<InvoiceDto> invoiceDtoList = listAllByTypeAndCompany(invoiceType);
 
