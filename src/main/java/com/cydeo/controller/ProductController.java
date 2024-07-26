@@ -18,10 +18,11 @@ public class ProductController {
 
     @GetMapping("/list")
     public String getProducts(Model model) {
-        model.addAttribute(
-                "products", productService.listAllProducts());
+//        model.addAttribute(
+//                "products", productService.listAllProducts());
+        model.addAttribute("products", productService.listProductsByCategoryAndName());
 
-                return "/products/product-list";
+                return "product/product-list";
 
     }
 }
