@@ -18,7 +18,8 @@ public class CategoryController {
 
     @GetMapping("/list")
     public String getAllCategories(Model model){
-        model.addAttribute("category", categoryService.listAllCategories());
+//        model.addAttribute("categories", categoryService.listAllCategories());
+        model.addAttribute("categories", categoryService.listCategoryByCompany());
 
         return "/category/category-list";
     }
