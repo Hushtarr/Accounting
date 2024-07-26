@@ -20,12 +20,6 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         this.mapperUtil = mapperUtil;
     }
 
-    @Override
-    public List<InvoiceProductDto> listAllInvoiceProducts() {
-        return repository.findAll().stream()
-                .map(invoiceProduct -> mapperUtil.convert(invoiceProduct, new InvoiceProductDto()))
-                .toList();
-    }
 
     @Override
     public InvoiceProductDto findById(Long id) {
