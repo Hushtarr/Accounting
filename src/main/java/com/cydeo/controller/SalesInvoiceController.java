@@ -126,6 +126,12 @@ public class SalesInvoiceController {
 
     }
 
+    @GetMapping("delete/{id}")
+    public String deleteSalesInvoice(@PathVariable("id") Long id, Model model) {
+        invoiceService.delete(id);
+        return "redirect:/salesInvoices/list";
+    }
+
     @ModelAttribute
     public void commonAttributes(Model model) {
         UserDto currentUser = securityService.getLoggedInUser();
