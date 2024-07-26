@@ -21,7 +21,7 @@ public class InvoiceDto {
 
     private String invoiceNo;
 
-    private InvoiceStatus invoiceStatus;
+    private InvoiceStatus invoiceStatus = InvoiceStatus.AWAITING_APPROVAL;
 
     private InvoiceType invoiceType;
 
