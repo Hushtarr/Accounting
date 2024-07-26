@@ -9,6 +9,8 @@ import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,6 +43,14 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = productRepository.findAll();
         return products.stream().map(product -> mapperUtil.convert(product,new ProductDto())).collect(Collectors.toList());
     }
+
+    @Override
+    public List<ProductDto> listAllProductsByCompanyId(Long id) {
+        List<Product> products = productRepository.findAllByCategory_Company_Id(id);
+        return products.stream().map(product -> mapperUtil.convert(product,new ProductDto())).collect(Collectors.toList());
+    }
+
+
 
     @Override
     public List<ProductDto> listProductsByCategoryAndName() {
