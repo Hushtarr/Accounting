@@ -16,5 +16,11 @@ public interface UserService {
 
     List<UserDto> findAll();
 
+    List<UserDto> findAllUsers();
+
+    List<UserDto> findUsersByRole(String role);
+
+    List<UserDto> findUsersByCompanyId(Long companyId);
+
 
 }
