@@ -1,5 +1,8 @@
 package com.cydeo.controller;
 
+import com.cydeo.enums.InvoiceType;
+import com.cydeo.service.InvoiceProductService;
+import com.cydeo.service.InvoiceService;
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.dto.ProductDto;
@@ -46,7 +49,7 @@ public class SalesInvoiceController {
     @GetMapping("/list")
     public String listSalesInvoice(Model model){
 
-        model.addAttribute("invoices", invoiceService.listSalesInvoicesByCompany());
+        model.addAttribute("invoices", invoiceService.listAllByTypeAndCompany(InvoiceType.SALES));
 
         return "/invoice/sales-invoice-list";
     }
