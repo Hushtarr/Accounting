@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface InvoiceService {
 
-    InvoiceDto save(InvoiceDto invoiceDto);
+    InvoiceDto save(InvoiceDto invoiceDto, InvoiceType invoiceType);
     InvoiceDto findById(Long id);
     void delete(Long id);
     List<InvoiceDto> listAllByTypeAndCompany(InvoiceType invoiceType);
