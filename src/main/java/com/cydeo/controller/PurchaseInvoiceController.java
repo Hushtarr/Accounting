@@ -41,7 +41,7 @@ public class PurchaseInvoiceController {
     @GetMapping("/delete/{id}")
     public String deleteInvoice(@PathVariable("id") Long id) {
          invoiceService.delete(id);
-         return "redirect:/invoice/purchase-invoice-create";
+         return "redirect:/purchaseInvoices/create";
     }
 
     @GetMapping("/list")
@@ -60,13 +60,13 @@ public class PurchaseInvoiceController {
         return "/invoice/purchase-invoice-create";
     }
 
-//    @PostMapping("/create")
-//    public String insertPurchaseInvoice(@ModelAttribute("newPurchaseInvoice") InvoiceDto newPurchaseInvoice) {
-//
-//        invoiceService.save(newPurchaseInvoice);
-//
-//        return "redirect:/purchaseInvoices/update/{invoiceId}";
-//    }
+    @PostMapping("/create")
+    public String insertPurchaseInvoice(@ModelAttribute("newPurchaseInvoice") InvoiceDto newPurchaseInvoice) {
+        newPurchaseInvoice.setInvoiceType(InvoiceType.PURCHASE);
+        invoiceService.save(newPurchaseInvoice);
+
+        return "redirect:/purchaseInvoices/list";
+    }
 
 }
 
