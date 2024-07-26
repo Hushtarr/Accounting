@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Table(name = "invoices")
-@Where(clause = "is_deleted=false")
+@Where(clause = "is_deleted = false")
 public class Invoice extends BaseEntity {
 
     @Column(name = "invoice_no")

@@ -25,7 +25,8 @@ public class InvoiceDto {
 
     private InvoiceType invoiceType;
 
-  //  @DateTimeFormat(pattern = "yyyy-MM-dd") //as date is applied automatically
+
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime date;
 
 
@@ -39,4 +40,6 @@ public class InvoiceDto {
     private BigDecimal tax;
 
     private BigDecimal total;
+
+
 }

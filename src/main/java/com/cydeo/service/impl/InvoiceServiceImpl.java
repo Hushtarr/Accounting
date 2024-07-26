@@ -30,6 +30,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceDto save(InvoiceDto invoiceDto) {
         Invoice entity = mapperUtil.convert(invoiceDto, new Invoice());
+        // type needs to be set
         invoiceRepository.save(entity);
         return invoiceDto;
     }
@@ -90,6 +91,17 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoiceRepository.save(invoice.get());
         }
 
+    }
+
+
+    @Override
+    public void update(InvoiceDto invoiceDto) {
+        Invoice invoice = invoiceRepository.findById(invoiceDto.getId()).orElseThrow(IllegalArgumentException::new);
+        invoiceDto.setInvoiceStatus(invoice.getInvoiceStatus());
+        invoiceDto.setInvoiceType(invoice.getInvoiceType());
+        invoiceDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
+
+        save(invoiceDto);
     }
 
 }
