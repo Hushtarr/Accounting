@@ -23,4 +23,5 @@ public interface UserService {
     List<UserDto> findUsersByCompanyId(Long companyId);
 
 
+    void deleteUser(Long id);
 }
