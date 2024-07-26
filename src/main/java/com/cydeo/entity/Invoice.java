@@ -33,7 +33,7 @@ public class Invoice extends BaseEntity {
     @Column(name = "invoice_status")
     private InvoiceStatus invoiceStatus;
 
-    @Column(name = "date")
+    @Column(columnDefinition = "DATE")
     private LocalDateTime date;
 
     @ManyToOne
