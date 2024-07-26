@@ -55,8 +55,8 @@ public class SalesInvoiceController {
 
         invoiceService.save(invoiceDto, InvoiceType.SALES);
 
-        //return "redirect:/salesInvoices/update/{invoiceId}";
-        return "";
+        return "redirect:/salesInvoices/update/{invoiceId}";
+
     }
 
     @GetMapping("/print/{id}")

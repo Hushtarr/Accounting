@@ -62,8 +62,7 @@ public class PurchaseInvoiceController {
 
     @PostMapping("/create")
     public String insertPurchaseInvoice(@ModelAttribute("newPurchaseInvoice") InvoiceDto newPurchaseInvoice) {
-        newPurchaseInvoice.setInvoiceType(InvoiceType.PURCHASE);
-        invoiceService.save(newPurchaseInvoice);
+        invoiceService.save(newPurchaseInvoice, InvoiceType.PURCHASE);
 
         return "redirect:/purchaseInvoices/list";
     }
