@@ -98,6 +98,9 @@ public class InvoiceServiceImpl implements InvoiceService {
         Invoice invoice = invoiceRepository.findById(invoiceDto.getId()).orElseThrow(IllegalArgumentException::new);
         invoiceDto.setInvoiceStatus(invoice.getInvoiceStatus());
         invoiceDto.setInvoiceType(invoice.getInvoiceType());
+        invoiceDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
+
+        save(invoiceDto);
     }
 
 }

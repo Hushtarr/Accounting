@@ -83,7 +83,7 @@ public class SalesInvoiceController {
         UserDto currentUser = securityService.getLoggedInUser();
 
         model.addAttribute("invoice", invoiceService.findById(id));
-        model.addAttribute("clients", clientVendorService.listAllClientVendors());
+        model.addAttribute("clients", clientVendorService.listAllClientVendorsByType(ClientVendorType.CLIENT));
         model.addAttribute("newInvoiceProduct", new InvoiceProductDto());
         model.addAttribute("products", productService.listAllProductsByCompanyId(currentUser.getCompany().getId()));
         model.addAttribute("invoiceProducts", invoiceProductService.listAllByInvoiceId(id));
@@ -102,7 +102,7 @@ public class SalesInvoiceController {
         if (bindingResult.hasErrors()) {
 
             model.addAttribute("invoice", invoiceService.findById(id));
-            model.addAttribute("clients", clientVendorService.listAllClientVendors());
+            model.addAttribute("clients", clientVendorService.listAllClientVendorsByType(ClientVendorType.CLIENT));
             model.addAttribute("products", productService.listAllProductsByCompanyId(currentUser.getCompany().getId()));
             model.addAttribute("invoiceProducts", invoiceProductService.listAllByInvoiceId(id));
             return "/invoice/sales-invoice-update";
@@ -111,7 +111,7 @@ public class SalesInvoiceController {
 
         invoiceProductService.save(invoiceProductDto);
         model.addAttribute("invoice", invoiceService.findById(id));
-        model.addAttribute("clients", clientVendorService.listAllClientVendors());
+        model.addAttribute("clients", clientVendorService.listAllClientVendorsByType(ClientVendorType.CLIENT));
         model.addAttribute("newInvoiceProduct", new InvoiceProductDto());
         model.addAttribute("products", productService.listAllProductsByCompanyId(currentUser.getCompany().getId()));
         model.addAttribute("invoiceProducts", invoiceProductService.listAllByInvoiceId(id));
@@ -128,7 +128,7 @@ public class SalesInvoiceController {
         UserDto currentUser = securityService.getLoggedInUser();
 
         model.addAttribute("invoice", invoiceService.findById(invoiceId));
-        model.addAttribute("clients", clientVendorService.listAllClientVendors());
+        model.addAttribute("clients", clientVendorService.listAllClientVendorsByType(ClientVendorType.CLIENT));
         model.addAttribute("newInvoiceProduct", new InvoiceProductDto());
         model.addAttribute("products", productService.listAllProductsByCompanyId(currentUser.getCompany().getId()));
         model.addAttribute("invoiceProducts", invoiceProductService.listAllByInvoiceId(invoiceId));
