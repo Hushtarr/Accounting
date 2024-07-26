@@ -54,5 +54,10 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
+    @Override
+    public void deleteUser(Long id) {
+
+    }
+
 
 }
