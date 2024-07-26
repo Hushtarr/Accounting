@@ -39,7 +39,6 @@ public class UserController {
     public String editUserForm(@PathVariable("id") Long id, Model model) {
         UserDto userDto = userService.findById(id);
         model.addAttribute("user", userDto);
-        model.addAttribute("userRoles", roleService.findAll());
         return "/user/user-update";
     }
 
@@ -58,7 +57,8 @@ public class UserController {
     @ModelAttribute
     public void commonAttributes(Model model) {
 
-        model.addAttribute("userRoles", userService.findAll());
+        model.addAttribute("Title","Cydeo Accounting-User");
+        model.addAttribute("userRoles", roleService.findAll());
         model.addAttribute("companies", companyService.listAllCompany());
 
     }
