@@ -1,6 +1,5 @@
 package com.cydeo.service.impl;
 
-import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.entity.Invoice;
 import com.cydeo.enums.InvoiceType;
@@ -28,9 +27,10 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public InvoiceDto save(InvoiceDto invoiceDto) {
+    public InvoiceDto save(InvoiceDto invoiceDto, InvoiceType invoiceType) {
+        invoiceDto.setInvoiceType(invoiceType);
+        invoiceDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
         Invoice entity = mapperUtil.convert(invoiceDto, new Invoice());
-        // type needs to be set
         invoiceRepository.save(entity);
         return invoiceDto;
     }
@@ -57,8 +57,6 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         InvoiceDto invoiceDto = new InvoiceDto();
         invoiceDto.setInvoiceType(invoiceType);
-        CompanyDto companyDto = companyService.getCompanyDtoByLoggedInUser();
-        invoiceDto.setCompany(companyDto);
 
         String prefix;
         int currentInvNum;
@@ -76,21 +74,17 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         invoiceDto.setInvoiceNo(String.format("%s-%03d", prefix, currentInvNum));
         invoiceDto.setDate(LocalDateTime.now());
-        invoiceDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
         return invoiceDto;
     }
 
 
     @Override
     public void delete(Long id) {
-
         Optional<Invoice> invoice = invoiceRepository.findById(id);
-
         if (invoice.isPresent()){
             invoice.get().setIsDeleted(true);
             invoiceRepository.save(invoice.get());
         }
-
     }
 
 
@@ -101,7 +95,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceDto.setInvoiceType(invoice.getInvoiceType());
         invoiceDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
 
-        save(invoiceDto);
+        save(invoiceDto, InvoiceType.SALES);
     }
 
 }

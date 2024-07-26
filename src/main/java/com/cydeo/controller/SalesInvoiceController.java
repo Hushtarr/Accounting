@@ -53,7 +53,7 @@ public class SalesInvoiceController {
     @PostMapping("/create")
     public String insertSalesInvoice(@ModelAttribute("newSalesInvoice")InvoiceDto invoiceDto){
 
-        invoiceService.save(invoiceDto);
+        invoiceService.save(invoiceDto, InvoiceType.SALES);
 
         //return "redirect:/salesInvoices/update/{invoiceId}";
         return "";
