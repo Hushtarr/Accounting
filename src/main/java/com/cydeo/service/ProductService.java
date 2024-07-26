@@ -9,4 +9,5 @@ public interface ProductService {
 
     ProductDto findById(Long id);
     List<ProductDto> listAllProducts();
+    List<ProductDto> listAllProductsByCompanyId(Long id);
 }

@@ -51,4 +51,13 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto()))
                 .toList();
     }
+
+    @Override
+    public void update(InvoiceDto invoiceDto) {
+        Invoice invoice = repository.findById(invoiceDto.getId()).orElseThrow(IllegalArgumentException::new);
+        invoiceDto.setInvoiceStatus(invoice.getInvoiceStatus());
+        invoiceDto.setInvoiceType(invoice.getInvoiceType());
+        invoiceDto.setCompany(securityService.getLoggedInUser().getCompany());
+    }
+
 }

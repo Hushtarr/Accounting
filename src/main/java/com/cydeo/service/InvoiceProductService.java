@@ -12,4 +12,8 @@ public interface InvoiceProductService {
 
     List<InvoiceProductDto> listAllByInvoiceId(Long id);
 
+    void save(InvoiceProductDto invoiceProductDto);
+
+    void deleteById(Long id);
+
 }
