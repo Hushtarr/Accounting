@@ -1,7 +1,9 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.ClientVendorDto;
 import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.InvoiceDto;
+import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Invoice;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.repository.InvoiceRepository;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
@@ -103,5 +106,13 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         save(invoiceDto);
     }
+
+    @Override
+    public List<InvoiceDto> listAllByClientVendor(ClientVendor clientVendor) {
+        List<Invoice> invoiceList = invoiceRepository.findByClientVendor(clientVendor);
+
+        return invoiceList.stream().map(invoice -> mapperUtil.convert(invoice, new InvoiceDto())).collect(Collectors.toList());
+    }
+
 
 }
