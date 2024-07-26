@@ -62,6 +62,16 @@ public class UserController {
         model.addAttribute("companies", companyService.listAllCompany());
 
     }
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable("id") Long id, Model model) {
+        UserDto userDto = userService.findById(id);
+        if (userDto.isOnlyAdmin()) {
+            model.addAttribute("error", "Cannot delete the only admin of the company.");
+            return "redirect:/users/list";
+        }
+        userService.deleteUser(id);
+        return "redirect:/users/list";
+    }
 
 
 }
