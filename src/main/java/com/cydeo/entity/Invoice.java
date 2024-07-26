@@ -6,6 +6,7 @@ import com.cydeo.entity.common.BaseEntity;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import lombok.*;
+import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Table(name = "invoices")
+@Where(clause = "is_deleted = false")
 public class Invoice extends BaseEntity {
 
     @Column(name = "invoice_no")
