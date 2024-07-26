@@ -50,4 +50,11 @@ public class CategoryServiceImpl implements CategoryService {
         dto.setCompany(currentUsersCompany);
         categoryRepository.save(mapperUtil.convert(dto, new Category()));
     }
+
+    @Override
+    public void update(CategoryDto dto) {
+        CompanyDto currentUsersCompany = companyService.getCompanyDtoByLoggedInUser();
+        dto.setCompany(currentUsersCompany);
+        categoryRepository.save(mapperUtil.convert(dto, new Category()));
+    }
 }
