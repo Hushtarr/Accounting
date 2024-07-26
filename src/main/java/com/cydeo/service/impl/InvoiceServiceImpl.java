@@ -30,6 +30,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceDto save(InvoiceDto invoiceDto) {
         Invoice entity = mapperUtil.convert(invoiceDto, new Invoice());
+        // type needs to be set
         invoiceRepository.save(entity);
         return invoiceDto;
     }
