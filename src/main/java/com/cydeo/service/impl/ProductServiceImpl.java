@@ -1,12 +1,10 @@
 package com.cydeo.service.impl;
 
-import com.cydeo.dto.CategoryDto;
-import com.cydeo.dto.CompanyDto;
+
 import com.cydeo.dto.ProductDto;
 import com.cydeo.entity.Category;
 import com.cydeo.entity.Product;
 import com.cydeo.repository.ProductRepository;
-import com.cydeo.service.CategoryService;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.ProductService;
 import com.cydeo.util.MapperUtil;
@@ -21,14 +19,13 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final MapperUtil mapperUtil;
     private final CompanyService companyService;
-    private final CategoryService categoryService;
 
-    public ProductServiceImpl(ProductRepository productRepository, MapperUtil mapperUtil, CompanyService companyService, CategoryService categoryService) {
+    public ProductServiceImpl(ProductRepository productRepository, MapperUtil mapperUtil, CompanyService companyService) {
         this.productRepository = productRepository;
         this.mapperUtil = mapperUtil;
         this.companyService = companyService;
-        this.categoryService = categoryService;
     }
+
 
     @Override
     public ProductDto findById(Long id) {
@@ -36,9 +33,9 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         return mapperUtil.convert(product,new ProductDto());
 
-//        Optional<Product> product = productRepository.findById(id);
-//        if (product.isPresent()) {
-//            return mapperUtil.convert(product.get(), ProductDto.class);}
+    //        Optional<Product> product = productRepository.findById(id);
+    //        if (product.isPresent()) {
+    //            return mapperUtil.convert(product.get(), ProductDto.class);}
 
         }
 

@@ -1,7 +1,6 @@
 package com.cydeo.controller;
 
 import com.cydeo.dto.ProductDto;
-import com.cydeo.entity.Product;
 import com.cydeo.enums.ProductUnit;
 import com.cydeo.service.CategoryService;
 import com.cydeo.service.ProductService;
@@ -61,7 +60,7 @@ public class ProductController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateProduct(@ModelAttribute("product") ProductDto productDto, @PathVariable("id") Long id) {
+    public String updateProduct(@ModelAttribute("product") ProductDto productDto) {
 
         productService.update(productDto);
         return "redirect:/products/list";
