@@ -1,11 +1,11 @@
 package com.cydeo.service.impl;
 
 import com.cydeo.dto.CategoryDto;
+import com.cydeo.dto.CompanyDto;
 import com.cydeo.entity.Category;
 import com.cydeo.repository.CategoryRepository;
 import com.cydeo.service.CategoryService;
 import com.cydeo.service.CompanyService;
-import com.cydeo.service.SecurityService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +31,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto findById(Long id) {
-        Category foundCategory = categoryRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-        return mapperUtil.convert(foundCategory, new CategoryDto());
+        Category category = categoryRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        CategoryDto dto = mapperUtil.convert(category, new CategoryDto());
+        dto.setHasProduct(!category.getProducts().isEmpty());
+        return dto;
     }
 
     @Override
@@ -40,5 +42,19 @@ public class CategoryServiceImpl implements CategoryService {
         Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
         return categoryRepository.findByCompanyIdOrderByDescriptionAsc(companyId).stream()
                 .map(category -> mapperUtil.convert(category, new CategoryDto())).toList();
+    }
+
+    @Override
+    public void save(CategoryDto dto) {
+        CompanyDto currentUsersCompany = companyService.getCompanyDtoByLoggedInUser();
+        dto.setCompany(currentUsersCompany);
+        categoryRepository.save(mapperUtil.convert(dto, new Category()));
+    }
+
+    @Override
+    public void update(CategoryDto dto) {
+        CompanyDto currentUsersCompany = companyService.getCompanyDtoByLoggedInUser();
+        dto.setCompany(currentUsersCompany);
+        categoryRepository.save(mapperUtil.convert(dto, new Category()));
     }
 }

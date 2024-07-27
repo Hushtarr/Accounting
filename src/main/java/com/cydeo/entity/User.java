@@ -2,6 +2,7 @@ package com.cydeo.entity;
 
 import com.cydeo.entity.common.BaseEntity;
 import lombok.*;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
+@Where(clause = "is_deleted = false")
 public class User extends BaseEntity {
 
     @Column(nullable = false, unique = true)

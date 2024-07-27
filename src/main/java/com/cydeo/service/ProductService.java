@@ -12,4 +12,5 @@ public interface ProductService {
     List<ProductDto> listProductsByCategoryAndName();
     void save(ProductDto productDto);
     void update(ProductDto productDto);
+    List<ProductDto> listAllProductsByCompanyId(Long id);
 }

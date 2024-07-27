@@ -1,7 +1,9 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.ClientVendorDto;
 import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.InvoiceDto;
+import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Invoice;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.repository.InvoiceRepository;
@@ -12,7 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
@@ -28,16 +32,17 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public InvoiceDto save(InvoiceDto invoiceDto) {
-        Invoice entity = mapperUtil.convert(invoiceDto, new Invoice());
-        invoiceRepository.save(entity);
-        return invoiceDto;
+    public InvoiceDto save(InvoiceDto invoiceDto, InvoiceType invoiceType) {
+        invoiceDto.setInvoiceType(invoiceType);
+        invoiceDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
+        Invoice savedInvoice = invoiceRepository.save(mapperUtil.convert(invoiceDto, new Invoice()));
+        return mapperUtil.convert(savedInvoice, new InvoiceDto());
     }
 
     @Override
     public InvoiceDto findById(Long id) {
 
-        Invoice foundInvoice = invoiceRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Invoice foundInvoice = invoiceRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invoice " + id + "not found"));
 
         return mapperUtil.convert(foundInvoice, new InvoiceDto());
     }
@@ -55,9 +60,6 @@ public class InvoiceServiceImpl implements InvoiceService {
     public InvoiceDto generateInvoiceForCompanyByType(InvoiceType invoiceType){
 
         InvoiceDto invoiceDto = new InvoiceDto();
-        invoiceDto.setInvoiceType(invoiceType);
-        CompanyDto companyDto = companyService.getCompanyDtoByLoggedInUser();
-        invoiceDto.setCompany(companyDto);
 
         String prefix;
         int currentInvNum;
@@ -75,7 +77,6 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         invoiceDto.setInvoiceNo(String.format("%s-%03d", prefix, currentInvNum));
         invoiceDto.setDate(LocalDateTime.now());
-        invoiceDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
         return invoiceDto;
     }
 
@@ -89,7 +90,24 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoice.get().setIsDeleted(true);
             invoiceRepository.save(invoice.get());
         }
-
     }
+
+
+    @Override
+    public void update(InvoiceDto invoiceDto) {
+        Invoice invoice = invoiceRepository.findById(invoiceDto.getId()).orElseThrow(IllegalArgumentException::new);
+        invoiceDto.setInvoiceStatus(invoice.getInvoiceStatus());
+        invoiceDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
+
+        save(invoiceDto, invoice.getInvoiceType());
+    }
+
+    @Override
+    public List<InvoiceDto> listAllByClientVendor(ClientVendor clientVendor) {
+        List<Invoice> invoiceList = invoiceRepository.findByClientVendor(clientVendor);
+
+        return invoiceList.stream().map(invoice -> mapperUtil.convert(invoice, new InvoiceDto())).collect(Collectors.toList());
+    }
+
 
 }
