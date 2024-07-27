@@ -1,17 +1,17 @@
 package com.cydeo.controller;
 
 import com.cydeo.dto.InvoiceDto;
+import com.cydeo.dto.InvoiceProductDto;
+import com.cydeo.dto.UserDto;
 import com.cydeo.enums.InvoiceType;
-import com.cydeo.service.ClientVendorService;
+import com.cydeo.service.*;
 import com.cydeo.enums.ClientVendorType;
-import com.cydeo.service.InvoiceProductService;
-import com.cydeo.service.InvoiceService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/purchaseInvoices")
@@ -20,11 +20,15 @@ public class PurchaseInvoiceController {
     private final InvoiceService invoiceService;
     private final InvoiceProductService invoiceProductService;
     private final ClientVendorService clientVendorService;
+    private final ProductService productService;
+    private final CompanyService companyService;
 
-    public PurchaseInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService) {
+    public PurchaseInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService, ProductService productService, CompanyService companyService) {
         this.invoiceService = invoiceService;
         this.invoiceProductService = invoiceProductService;
         this.clientVendorService = clientVendorService;
+        this.productService = productService;
+        this.companyService = companyService;
     }
 
     @GetMapping("/print/{id}")
@@ -41,7 +45,7 @@ public class PurchaseInvoiceController {
     @GetMapping("/delete/{id}")
     public String deleteInvoice(@PathVariable("id") Long id) {
          invoiceService.delete(id);
-         return "redirect:/invoice/purchase-invoice-create";
+         return "redirect:/purchaseInvoices/create";
     }
 
     @GetMapping("/list")
@@ -60,13 +64,16 @@ public class PurchaseInvoiceController {
         return "/invoice/purchase-invoice-create";
     }
 
-//    @PostMapping("/create")
-//    public String insertPurchaseInvoice(@ModelAttribute("newPurchaseInvoice") InvoiceDto newPurchaseInvoice) {
-//
-//        invoiceService.save(newPurchaseInvoice);
-//
-//        return "redirect:/purchaseInvoices/update/{invoiceId}";
-//    }
+    @PostMapping("/create")
+    public String insertPurchaseInvoice(@ModelAttribute("newPurchaseInvoice") InvoiceDto newPurchaseInvoice) {
+        InvoiceDto savedInvoice = invoiceService.save(newPurchaseInvoice, InvoiceType.PURCHASE);
+        return "redirect:/purchaseInvoices/update/"+savedInvoice.getId();
+    }
+
+    @ModelAttribute
+    public void commonAttributes(Model model) {
+        model.addAttribute("Title","Cydeo Accounting-Purchase_Invoice");
+    }
 
 }
 

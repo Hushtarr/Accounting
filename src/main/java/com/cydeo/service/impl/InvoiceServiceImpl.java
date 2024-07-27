@@ -90,6 +90,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoice.get().setIsDeleted(true);
             invoiceRepository.save(invoice.get());
         }
+
     }
 
 
