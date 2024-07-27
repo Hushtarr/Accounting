@@ -4,6 +4,7 @@ import com.cydeo.service.ClientVendorService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -21,6 +22,13 @@ public class ClientVendorController {
                 "clientVendors", clientVendorService.listAllClientVendorsByCompany());
 
         return "/clientVendor/clientVendor-list";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteClientVendors(@PathVariable("id") Long id) {
+        clientVendorService.delete(id);
+
+        return "redirect:/clientVendors/list";
     }
 
 }
