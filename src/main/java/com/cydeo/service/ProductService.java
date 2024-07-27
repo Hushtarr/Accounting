@@ -9,7 +9,6 @@ public interface ProductService {
 
     ProductDto findById(Long id);
     List<ProductDto> listAllProducts();
-    List<ProductDto> findAllInStock();
-
-
+    List<ProductDto> listProductsByCategoryAndName();
+    List<ProductDto> listAllProductsByCompanyId(Long id);
 }

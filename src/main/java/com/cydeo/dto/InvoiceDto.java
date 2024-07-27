@@ -10,6 +10,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,13 +21,13 @@ public class InvoiceDto {
 
     private String invoiceNo;
 
-    private InvoiceStatus invoiceStatus;
+    private InvoiceStatus invoiceStatus = InvoiceStatus.AWAITING_APPROVAL;
 
     private InvoiceType invoiceType;
 
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate date;
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime date;
 
 
     private CompanyDto company;

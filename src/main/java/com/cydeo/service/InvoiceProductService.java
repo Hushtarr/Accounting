@@ -6,10 +6,13 @@ import java.util.List;
 
 public interface InvoiceProductService {
 
-    List<InvoiceProductDto> listAllInvoiceProducts();
 
     InvoiceProductDto findById(Long id);
 
     List<InvoiceProductDto> listAllByInvoiceId(Long id);
+
+    void save(InvoiceProductDto invoiceProductDto);
+
+    void deleteById(Long id);
 
 }

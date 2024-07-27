@@ -11,4 +11,11 @@ public interface CompanyService {
     List<CompanyDto> listAllCompany();
 
     CompanyDto getCompanyDtoByLoggedInUser();
+
+    List<CompanyDto> findAllAndSorted();
+
+    void save(CompanyDto companyDto);
+
+    void update(CompanyDto companyDto);
+
 }

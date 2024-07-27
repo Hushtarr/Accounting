@@ -20,12 +20,6 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         this.mapperUtil = mapperUtil;
     }
 
-    @Override
-    public List<InvoiceProductDto> listAllInvoiceProducts() {
-        return repository.findAll().stream()
-                .map(invoiceProduct -> mapperUtil.convert(invoiceProduct, new InvoiceProductDto()))
-                .toList();
-    }
 
     @Override
     public InvoiceProductDto findById(Long id) {
@@ -41,4 +35,18 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
                 .map(invoiceProduct -> mapperUtil.convert(invoiceProduct, new InvoiceProductDto()))
                 .toList();
     }
+
+    @Override
+    public void save(InvoiceProductDto invoiceProductDto) {
+        invoiceProductDto.setId(null);
+        repository.save(mapperUtil.convert(invoiceProductDto, new InvoiceProduct()));
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        InvoiceProduct invoiceProduct = repository.findById(id).orElseThrow(IllegalArgumentException::new);
+        invoiceProduct.setIsDeleted(true);
+        repository.save(invoiceProduct);
+    }
+
 }

@@ -6,18 +6,21 @@ import com.cydeo.entity.common.BaseEntity;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import lombok.*;
+import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @Table(name = "invoices")
+@Where(clause = "is_deleted = false")
 public class Invoice extends BaseEntity {
 
     @Column(name = "invoice_no")
@@ -32,8 +35,8 @@ public class Invoice extends BaseEntity {
     @Column(name = "invoice_status")
     private InvoiceStatus invoiceStatus;
 
-    @Column(name = "date")
-    private LocalDate date;
+    @Column(columnDefinition = "DATE")
+    private LocalDateTime date;
 
     @ManyToOne
     @JoinColumn(name = "client_vendor_id")
