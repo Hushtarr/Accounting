@@ -17,4 +17,10 @@ public interface UserService {
     List<UserDto> findAll();
 
     void deleteUser(Long id);
+
+    boolean emailExists(String email);
+
+    boolean isOnlyAdmin(UserDto userDto);
+
+
 }
