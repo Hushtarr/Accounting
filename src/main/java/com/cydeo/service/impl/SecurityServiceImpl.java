@@ -37,4 +37,16 @@ public class SecurityServiceImpl implements SecurityService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return userService.findByUsername(username);
     }
+
+    @Override
+    public boolean isRootUser() {
+        UserDto user = getLoggedInUser();
+        return user.getRole().getDescription().equals("Root User");
+    }
+
+    @Override
+    public boolean isAdmin() {
+        UserDto user = getLoggedInUser();
+        return user.getRole().getDescription().equals("Admin");
+    }
 }
