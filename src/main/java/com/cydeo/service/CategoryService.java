@@ -9,4 +9,5 @@ public interface CategoryService {
     CategoryDto findById(Long id);
     List<CategoryDto> listCategoryByCompany();
     void save(CategoryDto dto);
+    void update(CategoryDto dto);
 }
