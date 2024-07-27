@@ -30,9 +30,8 @@ public class InvoiceServiceImpl implements InvoiceService {
     public InvoiceDto save(InvoiceDto invoiceDto, InvoiceType invoiceType) {
         invoiceDto.setInvoiceType(invoiceType);
         invoiceDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
-        Invoice entity = mapperUtil.convert(invoiceDto, new Invoice());
-        invoiceRepository.save(entity);
-        return invoiceDto;
+        Invoice savedInvoice = invoiceRepository.save(mapperUtil.convert(invoiceDto, new Invoice()));
+        return mapperUtil.convert(savedInvoice, new InvoiceDto());
     }
 
     @Override
