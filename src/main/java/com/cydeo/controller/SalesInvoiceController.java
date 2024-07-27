@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -42,7 +43,7 @@ public class SalesInvoiceController {
 
 
     @GetMapping("/create")
-    public String createSalesInvoice(Model model){
+    public String createSalesInvoice(Model model) {
 
         model.addAttribute("newSalesInvoice", invoiceService.generateInvoiceForCompanyByType(InvoiceType.SALES));
         model.addAttribute("clients", clientVendorService.listAllClientVendorsByType(ClientVendorType.CLIENT));
@@ -51,16 +52,15 @@ public class SalesInvoiceController {
     }
 
     @PostMapping("/create")
-    public String insertSalesInvoice(@ModelAttribute("newSalesInvoice")InvoiceDto invoiceDto){
+    public String insertSalesInvoice(@ModelAttribute("newSalesInvoice") InvoiceDto invoiceDto) {
 
-        invoiceService.save(invoiceDto, InvoiceType.SALES);
+        InvoiceDto savedInvoice = invoiceService.save(invoiceDto, InvoiceType.SALES);
 
-        return "redirect:/salesInvoices/update/{invoiceId}";
-
+        return "redirect:/salesInvoices/update/" + savedInvoice.getId();
     }
 
     @GetMapping("/print/{id}")
-    public String printSalesInvoice(@PathVariable("id") Long id, Model model){
+    public String printSalesInvoice(@PathVariable("id") Long id, Model model) {
 
         model.addAttribute("company", invoiceService.findById(id).getCompany());
         model.addAttribute("invoice", invoiceService.findById(id));
@@ -70,7 +70,7 @@ public class SalesInvoiceController {
     }
 
     @GetMapping("/list")
-    public String listSalesInvoice(Model model){
+    public String listSalesInvoice(Model model) {
 
         model.addAttribute("invoices", invoiceService.listAllByTypeAndCompany(InvoiceType.SALES));
 
@@ -117,8 +117,8 @@ public class SalesInvoiceController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateSalesInvoice( @ModelAttribute("invoice") InvoiceDto invoiceDto,
-                                      @PathVariable("id") Long id, Model model) {
+    public String updateSalesInvoice(@ModelAttribute("invoice") InvoiceDto invoiceDto,
+                                     @PathVariable("id") Long id) {
 
         invoiceService.update(invoiceDto);
 
@@ -126,8 +126,8 @@ public class SalesInvoiceController {
 
     }
 
-    @GetMapping("delete/{id}")
-    public String deleteSalesInvoice(@PathVariable("id") Long id, Model model) {
+    @GetMapping("/delete/{id}")
+    public String deleteSalesInvoice(@PathVariable("id") Long id) {
         invoiceService.delete(id);
         return "redirect:/salesInvoices/list";
     }

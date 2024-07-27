@@ -1,5 +1,6 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.entity.Invoice;
 import com.cydeo.enums.InvoiceType;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -37,7 +39,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceDto findById(Long id) {
 
-        Invoice foundInvoice = invoiceRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Invoice foundInvoice = invoiceRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invoice " + id + "not found"));
 
         return mapperUtil.convert(foundInvoice, new InvoiceDto());
     }
@@ -55,7 +57,6 @@ public class InvoiceServiceImpl implements InvoiceService {
     public InvoiceDto generateInvoiceForCompanyByType(InvoiceType invoiceType){
 
         InvoiceDto invoiceDto = new InvoiceDto();
-        invoiceDto.setInvoiceType(invoiceType);
 
         String prefix;
         int currentInvNum;
@@ -79,11 +80,14 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public void delete(Long id) {
+
         Optional<Invoice> invoice = invoiceRepository.findById(id);
+
         if (invoice.isPresent()){
             invoice.get().setIsDeleted(true);
             invoiceRepository.save(invoice.get());
         }
+
     }
 
 
@@ -91,10 +95,9 @@ public class InvoiceServiceImpl implements InvoiceService {
     public void update(InvoiceDto invoiceDto) {
         Invoice invoice = invoiceRepository.findById(invoiceDto.getId()).orElseThrow(IllegalArgumentException::new);
         invoiceDto.setInvoiceStatus(invoice.getInvoiceStatus());
-        invoiceDto.setInvoiceType(invoice.getInvoiceType());
         invoiceDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
 
-        save(invoiceDto, InvoiceType.SALES);
+        save(invoiceDto, invoice.getInvoiceType());
     }
 
 }
