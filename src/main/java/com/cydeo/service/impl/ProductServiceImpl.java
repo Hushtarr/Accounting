@@ -1,8 +1,12 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.CategoryDto;
+import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.ProductDto;
+import com.cydeo.entity.Category;
 import com.cydeo.entity.Product;
 import com.cydeo.repository.ProductRepository;
+import com.cydeo.service.CategoryService;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.ProductService;
 import com.cydeo.util.MapperUtil;
@@ -17,11 +21,13 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final MapperUtil mapperUtil;
     private final CompanyService companyService;
+    private final CategoryService categoryService;
 
-    public ProductServiceImpl(ProductRepository productRepository, MapperUtil mapperUtil, CompanyService companyService) {
+    public ProductServiceImpl(ProductRepository productRepository, MapperUtil mapperUtil, CompanyService companyService, CategoryService categoryService) {
         this.productRepository = productRepository;
         this.mapperUtil = mapperUtil;
         this.companyService = companyService;
+        this.categoryService = categoryService;
     }
 
     @Override
@@ -51,6 +57,20 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void save(ProductDto productDto) {
+
+        Product product = mapperUtil.convert(productDto,new Product());
+        product.setCategory(mapperUtil.convert(productDto.getCategory(), new Category()));
+        productRepository.save(product);
+    }
+
+    @Override
+    public void update(ProductDto productDto) {
+        Product product = mapperUtil.convert(productDto,new Product());
+        product.setCategory(mapperUtil.convert(productDto.getCategory(), new Category()));
+        productRepository.save(product);
+    }
 
 
 }
