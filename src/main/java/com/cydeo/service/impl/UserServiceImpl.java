@@ -80,5 +80,10 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Override
+    public boolean isPasswordMatched(String password, String confirmPassword) {
+        return password != null && password.equals(confirmPassword);
+    }
+
 
 }

@@ -60,6 +60,13 @@ public class UserController {
             return "/user/user-create";
         }
 
+        if (!userService.isPasswordMatched(userDto.getPassword(), userDto.getConfirmPassword())) {
+            bindingResult.rejectValue("confirmPassword", "error.confirmPassword", "Passwords should match.");
+            UserDto loggedInUser = securityService.getLoggedInUser();
+            setRoleAndCompanyAttributes(model, loggedInUser);
+            return "/user/user-create";
+        }
+
         try {
             userService.save(userDto);
         } catch (Exception e) {
@@ -98,6 +105,13 @@ public class UserController {
 
         if (userService.emailExists(userDto.getUsername()) && !userService.findById(userDto.getId()).getUsername().equals(userDto.getUsername())) {
             bindingResult.rejectValue("username", "error.username", "A user with this email already exists. Please try with a different email.");
+            UserDto loggedInUser = securityService.getLoggedInUser();
+            setRoleAndCompanyAttributes(model, loggedInUser);
+            return "/user/user-update";
+        }
+
+        if (!userService.isPasswordMatched(userDto.getPassword(), userDto.getConfirmPassword())) {
+            bindingResult.rejectValue("confirmPassword", "error.confirmPassword", "Passwords should match.");
             UserDto loggedInUser = securityService.getLoggedInUser();
             setRoleAndCompanyAttributes(model, loggedInUser);
             return "/user/user-update";
@@ -149,47 +163,26 @@ public class UserController {
     private void setRoleAndCompanyAttributes(Model model, UserDto loggedInUser) {
         List<RoleDto> roles;
         List<CompanyDto> companies;
-        RoleDto defaultRole = null;
 
         if (securityService.isRootUser()) {
-
             roles = roleService.findAll().stream()
                     .filter(role -> Objects.equals("Admin", role.getDescription()))
                     .collect(Collectors.toList());
-            companies = companyService.listAllCompany()
-                    .stream()
+            companies = companyService.listAllCompany().stream()
                     .filter(company -> !"CYDEO".equals(company.getTitle()))
                     .collect(Collectors.toList());
         } else if (securityService.isAdmin()) {
-
             roles = roleService.findAll().stream()
                     .filter(role -> List.of("Admin", "Manager", "Employee").contains(role.getDescription()))
                     .collect(Collectors.toList());
             companies = List.of(loggedInUser.getCompany());
         } else {
-
             roles = roleService.findAll();
             companies = List.of(loggedInUser.getCompany());
         }
 
-        // Add roles and companies to the model
         model.addAttribute("userRoles", roles);
         model.addAttribute("companies", companies);
-
-        // Set default role if needed
-        if (model.containsAttribute("newUser")) {
-            UserDto newUser = (UserDto) model.getAttribute("newUser");
-            if (defaultRole != null) {
-                newUser.setRole(defaultRole);
-                model.addAttribute("newUser", newUser);
-            }
-        } else if (model.containsAttribute("user")) {
-            UserDto user = (UserDto) model.getAttribute("user");
-            if (defaultRole != null) {
-                user.setRole(defaultRole);
-                model.addAttribute("user", user);
-            }
-        }
     }
 }
 
