@@ -53,4 +53,13 @@ public class UserDto {
 
     private boolean isOnlyAdmin;
 
+
+    public String getCompanyName() {
+        return company != null ? company.getTitle() : "";
+    }
+
+    public String getRoleDescription() {
+        return role != null ? role.getDescription() : "";
+    }
+
 }
