@@ -3,15 +3,23 @@ package com.cydeo.controller;
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.dto.UserDto;
+import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.service.*;
 import com.cydeo.enums.ClientVendorType;
+import com.cydeo.service.InvoiceProductService;
+import com.cydeo.service.InvoiceService;
+import com.cydeo.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/purchaseInvoices")
@@ -22,6 +30,7 @@ public class PurchaseInvoiceController {
     private final ClientVendorService clientVendorService;
     private final ProductService productService;
     private final CompanyService companyService;
+
 
     public PurchaseInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService, ProductService productService, CompanyService companyService) {
         this.invoiceService = invoiceService;
@@ -45,7 +54,7 @@ public class PurchaseInvoiceController {
     @GetMapping("/delete/{id}")
     public String deleteInvoice(@PathVariable("id") Long id) {
          invoiceService.delete(id);
-         return "redirect:/purchaseInvoices/create";
+         return "redirect:/invoice/purchase-invoice-create";
     }
 
     @GetMapping("/list")
@@ -75,6 +84,71 @@ public class PurchaseInvoiceController {
         model.addAttribute("Title","Cydeo Accounting-Purchase_Invoice");
     }
 
+    @GetMapping("/update/{invoiceId}")
+    public String editInvoice(@PathVariable("invoiceId") Long invoiceId, Model model){
+
+
+        model.addAttribute("invoice", invoiceService.findById(invoiceId));
+        model.addAttribute("vendors", clientVendorService.listAllClientVendorsByType(ClientVendorType.VENDOR));
+        model.addAttribute("products", productService.findAllInStock());
+        model.addAttribute("newInvoiceProduct", new InvoiceProductDto());
+        model.addAttribute("invoiceProducts", invoiceProductService.listAllByInvoiceId(invoiceId));
+
+
+
+        return "/invoice/purchase-invoice-update";
+
+    }
+
+    @PostMapping("/update")
+    public String updateInvoice(@Valid @ModelAttribute("invoice") InvoiceDto invoice,
+                                BindingResult bindingResult, @ModelAttribute("newInvoiceProduct") InvoiceProductDto newProduct,
+                                Model model){
+
+        if (bindingResult.hasErrors()) {
+
+            model.addAttribute("products", productService.findAllInStock());
+            model.addAttribute("vendors", clientVendorService.listAllClientVendors());
+            return "/invoice/purchase-invoice-update";
+        }
+
+
+        invoiceService.update(invoice);
+
+        return "redirect:/invoice/purchase-invoice-create";
+
+
+    }
+
+    @PostMapping("/addInvoiceProduct/{id}")
+    public String addInvoiceProduct(@Valid @ModelAttribute("newInvoiceProduct") InvoiceProductDto invoiceProductDto, BindingResult bindingResult, @PathVariable("id") Long id, Model model) {
+
+        if (bindingResult.hasErrors()) {
+
+            model.addAttribute("products", productService.findAllInStock());
+            model.addAttribute("vendors", clientVendorService.listAllClientVendors());
+            model.addAttribute("invoice", invoiceService.findById(id));
+            model.addAttribute("invoiceProducts", invoiceProductService.listAllByInvoiceId(id));
+            return "/invoice/purchase-invoice-update";
+        }
+        invoiceProductDto.setInvoice(invoiceService.findById(id));
+        invoiceProductDto.setTotal(invoiceProductDto.getPrice().multiply(BigDecimal.valueOf(invoiceProductDto.getQuantity())));
+
+        System.out.println("Total calculated: " + invoiceProductDto.getTotal());
+        invoiceProductService.save(invoiceProductDto);
+
+        return "redirect:/purchaseInvoices/update/"+id;
+    }
+
+    @GetMapping("/removeInvoiceProduct/{invoiceId}/{invoiceProuductId}")
+    public String removeInvoiceProduct(@PathVariable("invoiceId") Long invoiceid, @PathVariable("invoiceProuductId") Long invoiceProductid){
+
+        invoiceProductService.deleteById(invoiceProductid);
+
+        return "redirect:/purchaseInvoices/update/"+invoiceid;
+    }
 }
+
+
 
 
