@@ -16,6 +16,6 @@ public interface InvoiceService {
     void update(InvoiceDto invoiceDto);
     List<InvoiceDto> listAllByClientVendor(ClientVendor clientVendor);
 
-    void approve(InvoiceDto invoiceDto);
+    void approve(InvoiceDto invoiceDto, InvoiceType invoiceType);
 
 }

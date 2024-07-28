@@ -13,6 +13,7 @@ import com.cydeo.service.InvoiceService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -55,7 +56,17 @@ public class InvoiceServiceImpl implements InvoiceService {
         String companyTitle = companyService.getCompanyDtoByLoggedInUser().getTitle();
         return invoiceRepository.findByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(invoiceType, companyTitle)
                 .stream()
-                .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto()))
+                .map(invoice -> {
+                    InvoiceDto invoiceDto = mapperUtil.convert(invoice, new InvoiceDto());
+                    List<InvoiceProductDto> invoiceProductDtoList = invoiceProductService.listAllByInvoiceId(invoiceDto.getId());
+                    BigDecimal totalPrice = invoiceProductDtoList.stream().map(invoiceProductService::getInvoiceProductTotalWithoutTax).reduce(BigDecimal.ZERO,BigDecimal::add);
+                    BigDecimal totalWithTax = invoiceProductDtoList.stream().map(invoiceProductService::getInvoiceProductTotalWithTax).reduce(BigDecimal.ZERO,BigDecimal::add);
+                    BigDecimal totalTax = totalWithTax.subtract(totalPrice);
+                    invoiceDto.setPrice(totalPrice);
+                    invoiceDto.setTax(totalTax);
+                    invoiceDto.setTotal(totalWithTax);
+                    return invoiceDto;
+                })
                 .toList();
     }
 
@@ -114,12 +125,12 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public void approve(InvoiceDto invoiceDto) {
+    public void approve(InvoiceDto invoiceDto, InvoiceType invoiceType) {
         invoiceDto.setInvoiceStatus(InvoiceStatus.APPROVED);
         invoiceDto.setDate(LocalDateTime.now());
         List<InvoiceProductDto> invoiceProductDtos = invoiceProductService.listAllByInvoiceId(invoiceDto.getId());
         invoiceProductDtos.forEach(i->i.getProduct().setQuantityInStock(i.getProduct().getQuantityInStock()+i.getQuantity()));
+        save(invoiceDto,invoiceType);
     }
-
 
 }
