@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 @Data
@@ -12,8 +13,16 @@ import java.math.BigDecimal;
 public class InvoiceProductDto {
 
     private Long id;
+    @NotNull(message = "quantity is required field.")
+    @Min(value = 1, message = "quantity should be between 1 and 100")
+    @Max(value = 100, message = "quantity should be between 1 and 100")
     private Integer quantity;
+    @NotNull(message = "Price is a required field.")
+    @Min(value = 1, message = "Price should be at least $1")
     private BigDecimal price;
+    @NotNull(message = "tax is a required field")
+    @Min(value = 0, message = "Tax should be between 0% and 20%")
+    @Max(value = 20, message = "Tax should be between 0% and 20%")
     private Integer tax;
     private BigDecimal total;
     private BigDecimal profitLoss;

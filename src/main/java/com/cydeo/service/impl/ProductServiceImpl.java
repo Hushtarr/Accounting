@@ -72,5 +72,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
+
+    @Override
+    public List<ProductDto> findAllInStock() {
+        Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
+        List<Product> productsInStock = productRepository.findByCategory_Company_IdAndQuantityInStockGreaterThan(companyId, 0);
+        return productsInStock.stream().map(product -> mapperUtil.convert(product, new ProductDto())).collect(Collectors.toList());
+    }
+
 }
 
