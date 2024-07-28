@@ -70,6 +70,16 @@ public class PurchaseInvoiceController {
         return "redirect:/purchaseInvoices/update/"+savedInvoice.getId();
     }
 
+    @GetMapping("/approve/{id}")
+    public String approveInvoice(@PathVariable("id") Long id){
+        InvoiceDto invoiceDto = invoiceService.findById(id);
+
+
+        return "/invoice/purchase-invoice-list";
+
+    }
+
+
     @ModelAttribute
     public void commonAttributes(Model model) {
         model.addAttribute("Title","Cydeo Accounting-Purchase_Invoice");
