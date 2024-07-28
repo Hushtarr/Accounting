@@ -7,6 +7,8 @@ import com.cydeo.service.CompanyService;
 import com.cydeo.service.SecurityService;
 import com.cydeo.service.UserService;
 import com.cydeo.service.RoleService;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -118,7 +120,9 @@ public class UserController {
 
     @GetMapping("/list")
     public String listUsers(Model model) {
-        model.addAttribute("users", userService.findAll());
+        String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        UserDto loggedInUser = userService.findByUsername(username);
+        model.addAttribute("users", userService.findByCompanyId(loggedInUser.getCompany().getId()));
         return "/user/user-list";
     }
 

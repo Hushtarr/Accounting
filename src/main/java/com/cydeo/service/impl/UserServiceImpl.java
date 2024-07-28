@@ -57,7 +57,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public List<UserDto> findByCompanyId(Long companyId) {
+        return userRepository.findByCompany_Id(companyId).stream()
+                .map(user -> mapperUtil.convert(user, new UserDto()))
+                .toList();
+    }
+
+    @Override
+    public void deleteUser(Long id){
 
     }
 
