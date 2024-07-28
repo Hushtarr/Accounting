@@ -49,4 +49,9 @@ public class SecurityServiceImpl implements SecurityService {
         UserDto user = getLoggedInUser();
         return user.getRole().getDescription().equals("Admin");
     }
+
+    public boolean checkUser(String roleDescription){
+        UserDto user = getLoggedInUser();
+        return user.getRole().getDescription().equals(roleDescription);
+    }
 }
