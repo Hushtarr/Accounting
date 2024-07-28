@@ -1,13 +1,14 @@
 package com.cydeo.service.impl;
 
-import com.cydeo.dto.ClientVendorDto;
-import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.InvoiceDto;
+import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Invoice;
+import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.repository.InvoiceRepository;
 import com.cydeo.service.CompanyService;
+import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
@@ -24,11 +25,13 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final MapperUtil mapperUtil;
     private final CompanyService companyService;
+    private final InvoiceProductService invoiceProductService;
 
-    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, MapperUtil mapperUtil, CompanyService companyService) {
+    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, MapperUtil mapperUtil, CompanyService companyService, InvoiceProductService invoiceProductService) {
         this.invoiceRepository = invoiceRepository;
         this.mapperUtil = mapperUtil;
         this.companyService = companyService;
+        this.invoiceProductService = invoiceProductService;
     }
 
     @Override
@@ -108,6 +111,14 @@ public class InvoiceServiceImpl implements InvoiceService {
         List<Invoice> invoiceList = invoiceRepository.findByClientVendor(clientVendor);
 
         return invoiceList.stream().map(invoice -> mapperUtil.convert(invoice, new InvoiceDto())).collect(Collectors.toList());
+    }
+
+    @Override
+    public void approve(InvoiceDto invoiceDto) {
+        invoiceDto.setInvoiceStatus(InvoiceStatus.APPROVED);
+        invoiceDto.setDate(LocalDateTime.now());
+        List<InvoiceProductDto> invoiceProductDtos = invoiceProductService.listAllByInvoiceId(invoiceDto.getId());
+        invoiceProductDtos.forEach(i->i.getProduct().setQuantityInStock(i.getProduct().getQuantityInStock()+i.getQuantity()));
     }
 
 
