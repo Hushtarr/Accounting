@@ -71,10 +71,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
     }
 
-    @Override
-    public List<ProductDto> listAllProductsByCompanyId(Long id) {
-        return null;
-    }
+
 
     @Override
     public List<ProductDto> findAllInStock() {
