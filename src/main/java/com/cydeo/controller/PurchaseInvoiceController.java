@@ -23,15 +23,12 @@ public class PurchaseInvoiceController {
     private final InvoiceProductService invoiceProductService;
     private final ClientVendorService clientVendorService;
     private final ProductService productService;
-    private final CompanyService companyService;
-
 
     public PurchaseInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService, ProductService productService, CompanyService companyService) {
         this.invoiceService = invoiceService;
         this.invoiceProductService = invoiceProductService;
         this.clientVendorService = clientVendorService;
         this.productService = productService;
-        this.companyService = companyService;
     }
 
     @GetMapping("/print/{id}")
@@ -72,6 +69,18 @@ public class PurchaseInvoiceController {
         InvoiceDto savedInvoice = invoiceService.save(newPurchaseInvoice, InvoiceType.PURCHASE);
         return "redirect:/purchaseInvoices/update/"+savedInvoice.getId();
     }
+
+    @GetMapping("/approve/{id}")
+    public String approveInvoice(@PathVariable("id") Long id){
+        InvoiceDto invoiceDto = invoiceService.findById(id);
+        invoiceService.approve(invoiceDto, InvoiceType.PURCHASE);
+        return "redirect:/purchaseInvoices/list";
+    }
+
+
+
+
+
 
     @ModelAttribute
     public void commonAttributes(Model model) {
