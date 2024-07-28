@@ -1,11 +1,25 @@
 package com.cydeo.config;
 
+import com.cydeo.converter.CompanyDTOConverter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+
+    private final CompanyDTOConverter companyDTOConverter;
+
+    public WebConfig(CompanyDTOConverter companyDTOConverter) {
+        this.companyDTOConverter = companyDTOConverter;
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(companyDTOConverter);
+    }
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {

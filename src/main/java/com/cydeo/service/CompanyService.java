@@ -18,4 +18,6 @@ public interface CompanyService {
 
     void update(CompanyDto companyDto);
 
+    CompanyDto getUserCompany();
+
 }

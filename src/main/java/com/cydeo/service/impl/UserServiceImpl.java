@@ -29,10 +29,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void save(UserDto userDto) {
+        if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
+            throw new IllegalArgumentException("Passwords do not match");
+        }
+
         User user = mapperUtil.convert(userDto, new User());
         userRepository.save(user);
-
-
     }
 
     @Override
@@ -40,6 +42,7 @@ public class UserServiceImpl implements UserService {
         User user = mapperUtil.convert(userDto, new User());
         userRepository.save(user);
     }
+
 
     @Override
     public UserDto findById(Long id) {
@@ -62,8 +65,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long id){
+    public void deleteUser(Long id) {
 
+        User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        user.setDeleted(true);
+        userRepository.save(user);
+    }
+
+    @Override
+    public boolean emailExists(String email) {
+        return userRepository.findByUsername(email) != null;
+    }
+
+
+    @Override
+    public boolean isOnlyAdmin(UserDto userDto) {
+        return userRepository.isOnlyAdminInCompany(userDto.getCompany().getId());
+    }
+
+
+    @Override
+    public boolean isPasswordMatched(String password, String confirmPassword) {
+        return password != null && password.equals(confirmPassword);
+    }
+
+    @Override
+    public List<UserDto> findAllByRoleDescription(String role) {
+        return userRepository.findAllByRoleDescription(role).stream()
+                .map(user -> mapperUtil.convert(user, new UserDto()))
+                .toList();
     }
 
 

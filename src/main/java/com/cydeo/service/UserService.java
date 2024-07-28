@@ -19,4 +19,18 @@ public interface UserService {
     List<UserDto> findByCompanyId(Long companyId); // Add this method
 
     void deleteUser(Long id);
+
+    boolean emailExists(String email);
+
+    boolean isOnlyAdmin(UserDto userDto);
+
+
+    boolean isPasswordMatched(String password, String confirmPassword);
+
+    List<UserDto> findAllByRoleDescription(String role);
+
+
+
+
+
 }
