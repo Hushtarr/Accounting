@@ -27,6 +27,7 @@ public interface UserService {
 
     boolean isPasswordMatched(String password, String confirmPassword);
 
+    List<UserDto> findAllByRoleDescription(String role);
 
 
 

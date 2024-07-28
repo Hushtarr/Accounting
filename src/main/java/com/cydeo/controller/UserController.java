@@ -8,7 +8,6 @@ import com.cydeo.service.SecurityService;
 import com.cydeo.service.UserService;
 import com.cydeo.service.RoleService;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Controller
@@ -45,24 +43,21 @@ public class UserController {
 
     @PostMapping("/create")
     public String saveUser(@ModelAttribute("newUser") @Valid UserDto userDto, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
+        UserDto loggedInUser = securityService.getLoggedInUser();
 
-            UserDto loggedInUser = securityService.getLoggedInUser();
+        if (bindingResult.hasErrors()) {
             setRoleAndCompanyAttributes(model, loggedInUser);
             return "/user/user-create";
         }
 
-
         if (userService.emailExists(userDto.getUsername())) {
             bindingResult.rejectValue("username", "error.username", "A user with this email already exists. Please try with a different email.");
-            UserDto loggedInUser = securityService.getLoggedInUser();
             setRoleAndCompanyAttributes(model, loggedInUser);
             return "/user/user-create";
         }
 
         if (!userService.isPasswordMatched(userDto.getPassword(), userDto.getConfirmPassword())) {
             bindingResult.rejectValue("confirmPassword", "error.confirmPassword", "Passwords should match.");
-            UserDto loggedInUser = securityService.getLoggedInUser();
             setRoleAndCompanyAttributes(model, loggedInUser);
             return "/user/user-create";
         }
@@ -71,7 +66,6 @@ public class UserController {
             userService.save(userDto);
         } catch (Exception e) {
             model.addAttribute("error", "Error saving user: " + e.getMessage());
-            UserDto loggedInUser = securityService.getLoggedInUser();
             setRoleAndCompanyAttributes(model, loggedInUser);
             return "/user/user-create";
         }
@@ -94,25 +88,23 @@ public class UserController {
         return "/user/user-update";
     }
 
-    @PostMapping("/update")
+    @PostMapping("/update/{id}")
     public String updateUser(@ModelAttribute("user") @Valid UserDto userDto, BindingResult bindingResult, Model model) {
+        UserDto loggedInUser = securityService.getLoggedInUser();
+
         if (bindingResult.hasErrors()) {
-            UserDto loggedInUser = securityService.getLoggedInUser();
             setRoleAndCompanyAttributes(model, loggedInUser);
             return "/user/user-update";
         }
 
-
         if (userService.emailExists(userDto.getUsername()) && !userService.findById(userDto.getId()).getUsername().equals(userDto.getUsername())) {
             bindingResult.rejectValue("username", "error.username", "A user with this email already exists. Please try with a different email.");
-            UserDto loggedInUser = securityService.getLoggedInUser();
             setRoleAndCompanyAttributes(model, loggedInUser);
             return "/user/user-update";
         }
 
         if (!userService.isPasswordMatched(userDto.getPassword(), userDto.getConfirmPassword())) {
             bindingResult.rejectValue("confirmPassword", "error.confirmPassword", "Passwords should match.");
-            UserDto loggedInUser = securityService.getLoggedInUser();
             setRoleAndCompanyAttributes(model, loggedInUser);
             return "/user/user-update";
         }
@@ -124,7 +116,6 @@ public class UserController {
             userService.update(userDto);
         } catch (Exception e) {
             model.addAttribute("error", "Error updating user: " + e.getMessage());
-            UserDto loggedInUser = securityService.getLoggedInUser();
             setRoleAndCompanyAttributes(model, loggedInUser);
             return "/user/user-update";
         }
@@ -134,9 +125,14 @@ public class UserController {
 
     @GetMapping("/list")
     public String listUsers(Model model) {
-        String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        //String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UserDto loggedInUser = userService.findByUsername(username);
-        model.addAttribute("users", userService.findByCompanyId(loggedInUser.getCompany().getId()));
+        if(loggedInUser.getRole().getDescription().equals("Root User")){
+            model.addAttribute("users", userService.findAllByRoleDescription("Admin"));
+        }else {
+            model.addAttribute("users", userService.findByCompanyId(loggedInUser.getCompany().getId()));
+        }
         return "/user/user-list";
     }
 
@@ -160,18 +156,18 @@ public class UserController {
         return "redirect:/users/list";
     }
 
-    private void setRoleAndCompanyAttributes(Model model, UserDto loggedInUser) {
+    public void setRoleAndCompanyAttributes(Model model, UserDto loggedInUser) {
         List<RoleDto> roles;
         List<CompanyDto> companies;
 
-        if (securityService.isRootUser()) {
+        if (securityService.checkUser("Root User")) {
             roles = roleService.findAll().stream()
-                    .filter(role -> Objects.equals("Admin", role.getDescription()))
+                    .filter(role -> role.getDescription().equals("Admin"))
                     .collect(Collectors.toList());
             companies = companyService.listAllCompany().stream()
-                    .filter(company -> !"CYDEO".equals(company.getTitle()))
+                    .filter(company -> !company.getTitle().equals("CYDEO"))
                     .collect(Collectors.toList());
-        } else if (securityService.isAdmin()) {
+        } else if (securityService.checkUser("Admin")) {
             roles = roleService.findAll().stream()
                     .filter(role -> List.of("Admin", "Manager", "Employee").contains(role.getDescription()))
                     .collect(Collectors.toList());

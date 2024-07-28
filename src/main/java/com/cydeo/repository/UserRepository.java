@@ -14,5 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean isOnlyAdminInCompany(@Param("companyId") Long companyId);
 
     List<User> findByCompany_Id(Long companyId); // Add this method
+    List<User> findAllByRoleDescription(String roleDescription);
 
 }

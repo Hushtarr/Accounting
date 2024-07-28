@@ -16,13 +16,11 @@ public class UserDto {
 
 
     @NotBlank(message = "Email is required field.")
-    //@Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9-]+(.[A-Za-z0-9-]+)@[^-][A-Za-z0-9-]+(.[A-Za-z0-9-]+)(.[A-Za-z]{2,})$", message = "Invalid email format.")
-    @Email(message = "Invalid email format.")
+    @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9-]+(.[A-Za-z0-9-]+)@[^-][A-Za-z0-9-]+(.[A-Za-z0-9-]+)(.[A-Za-z]{2,})$", message = "Invalid email format.")
     private String username;
 
 
     @NotBlank(message = "Password is required field.")
-    //@Size(min = 4, message = "Password should be at least 4 characters long and needs to contain 1 capital letter, 1 small letter and 1 special character or number.")
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[\\d!@#$%^&*()_+])[A-Za-z\\d!@#$%^&*()_+]{4,}$",
             message = "Password should be at least 4 characters long and needs to contain 1 capital letter, 1 small letter and 1 special character or number.")
     private String password;
