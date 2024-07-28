@@ -16,7 +16,7 @@ public interface UserService {
 
     List<UserDto> findAll();
 
-    List<UserDto> findByCompanyId(Long companyId); // Add this method
+    List<UserDto> findByCompanyId(Long companyId);
 
     void deleteUser(Long id);
 

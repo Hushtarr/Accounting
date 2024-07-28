@@ -7,7 +7,9 @@ import com.cydeo.service.UserService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -54,14 +56,17 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> findAll() {
         return userRepository.findAll().stream()
                 .map(user -> mapperUtil.convert(user, new UserDto()))
-                .toList();
+                .sorted(Comparator.comparing(UserDto::getCompanyName)
+                        .thenComparing(UserDto::getRoleDescription))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<UserDto> findByCompanyId(Long companyId) {
         return userRepository.findByCompany_Id(companyId).stream()
                 .map(user -> mapperUtil.convert(user, new UserDto()))
-                .toList();
+                .sorted(Comparator.comparing(UserDto::getRoleDescription))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -89,12 +94,14 @@ public class UserServiceImpl implements UserService {
         return password != null && password.equals(confirmPassword);
     }
 
+
     @Override
     public List<UserDto> findAllByRoleDescription(String role) {
         return userRepository.findAllByRoleDescription(role).stream()
                 .map(user -> mapperUtil.convert(user, new UserDto()))
-                .toList();
+                .sorted(Comparator.comparing(UserDto::getCompanyName)
+                        .thenComparing(UserDto::getRoleDescription))
+                .collect(Collectors.toList());
     }
-
 
 }

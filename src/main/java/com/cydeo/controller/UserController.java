@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -128,6 +129,19 @@ public class UserController {
         //String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UserDto loggedInUser = userService.findByUsername(username);
+
+        List<UserDto> users;
+        if (loggedInUser.getRole().getDescription().equals("Root User")) {
+            users = userService.findAllByRoleDescription("Admin");
+        } else {
+            users = userService.findByCompanyId(loggedInUser.getCompany().getId());
+        }
+
+        users.sort(Comparator.comparing(UserDto::getCompanyName)
+                .thenComparing(UserDto::getRoleDescription));
+
+        model.addAttribute("users", users);
+
         if(loggedInUser.getRole().getDescription().equals("Root User")){
             model.addAttribute("users", userService.findAllByRoleDescription("Admin"));
         }else {
