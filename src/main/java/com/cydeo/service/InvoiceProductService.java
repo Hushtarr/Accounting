@@ -17,5 +17,6 @@ public interface InvoiceProductService {
     void deleteById(Long id);
 
     BigDecimal getInvoiceProductTotalWithTax(InvoiceProductDto invoiceProductDto);
+    BigDecimal getInvoiceProductTotalWithoutTax(InvoiceProductDto invoiceProductDto);
 
 }
