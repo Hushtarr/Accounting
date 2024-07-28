@@ -31,16 +31,13 @@ public class SalesInvoiceController {
     private final InvoiceProductService invoiceProductService;
     private final ClientVendorService clientVendorService;
     private final ProductService productService;
-    private final SecurityService securityService;
 
     public SalesInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService, ProductService productService, SecurityService securityService) {
         this.invoiceService = invoiceService;
         this.invoiceProductService = invoiceProductService;
         this.clientVendorService = clientVendorService;
         this.productService = productService;
-        this.securityService = securityService;
     }
-
 
     @GetMapping("/create")
     public String createSalesInvoice(Model model) {
@@ -134,9 +131,8 @@ public class SalesInvoiceController {
 
     @ModelAttribute
     public void commonAttributes(Model model) {
-        UserDto currentUser = securityService.getLoggedInUser();
         model.addAttribute("clients", clientVendorService.listAllClientVendorsByType(ClientVendorType.CLIENT));
-        model.addAttribute("products", productService.listAllProductsByCompanyId(currentUser.getCompany().getId()));
+        model.addAttribute("products", productService.listProductsByCategoryAndName());
     }
 
 }
