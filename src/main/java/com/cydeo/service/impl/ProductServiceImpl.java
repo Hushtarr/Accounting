@@ -48,14 +48,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> listAllProductsByCompanyId(Long id) {
-        List<Product> products = productRepository.findAllByCategory_Company_Id(id);
-        return products.stream().map(product -> mapperUtil.convert(product,new ProductDto())).collect(Collectors.toList());
-    }
-
-
-
-    @Override
     public List<ProductDto> listProductsByCategoryAndName() {
         Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
         List<Product> sortedProducts = productRepository.findByCompanyIdOrderByCategoryDescriptionAndProductNameAsc(companyId);
