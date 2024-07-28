@@ -2,8 +2,6 @@ package com.cydeo.controller;
 
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
-import com.cydeo.dto.UserDto;
-import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.service.*;
 import com.cydeo.enums.ClientVendorType;
@@ -16,10 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.Valid;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/purchaseInvoices")
@@ -132,9 +126,7 @@ public class PurchaseInvoiceController {
             return "/invoice/purchase-invoice-update";
         }
         invoiceProductDto.setInvoice(invoiceService.findById(id));
-        invoiceProductDto.setTotal(invoiceProductDto.getPrice().multiply(BigDecimal.valueOf(invoiceProductDto.getQuantity())));
 
-        System.out.println("Total calculated: " + invoiceProductDto.getTotal());
         invoiceProductService.save(invoiceProductDto);
 
         return "redirect:/purchaseInvoices/update/"+id;
