@@ -9,6 +9,10 @@ import org.springframework.stereotype.Component;
 public class CompanyDTOConverter implements Converter<String, CompanyDto> {
     CompanyService companyService;
 
+    public CompanyDTOConverter(CompanyService companyService) {
+        this.companyService = companyService;
+    }
+
     @Override
     public CompanyDto convert(String source) {
         if (source == null || source.equals("")) return null;
