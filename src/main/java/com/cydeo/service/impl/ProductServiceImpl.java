@@ -11,8 +11,6 @@ import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -79,6 +77,11 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(deletedId);
     }
 
+    @Override
+    public List<ProductDto> listAllProductsByCompanyId(Long id) {
+        //todo Danilo there were no implementation
+        return List.of();
+    }
 
 
     @Override
