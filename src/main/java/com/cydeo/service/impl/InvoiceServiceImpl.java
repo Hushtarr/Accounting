@@ -4,6 +4,7 @@ import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Invoice;
+import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.repository.InvoiceRepository;
@@ -134,9 +135,16 @@ public class InvoiceServiceImpl implements InvoiceService {
     public void approve(InvoiceDto invoiceDto, InvoiceType invoiceType) {
         invoiceDto.setInvoiceStatus(InvoiceStatus.APPROVED);
         invoiceDto.setDate(LocalDateTime.now());
-        List<InvoiceProductDto> invoiceProductDtos = invoiceProductService.listAllByInvoiceId(invoiceDto.getId());
-        invoiceProductDtos.forEach(i->i.getProduct().setQuantityInStock(i.getProduct().getQuantityInStock()+i.getQuantity()));
+
+        if(invoiceDto.getInvoiceType().equals(InvoiceType.PURCHASE)) {
+            List<InvoiceProductDto> invoiceProductDtos = invoiceProductService.listAllByInvoiceId(invoiceDto.getId());
+            invoiceProductDtos.forEach(i -> {
+                i.getProduct().setQuantityInStock(i.getProduct().getQuantityInStock() + i.getQuantity());
+                mapperUtil.convert(i, new InvoiceProduct());
+            });
+        }
         save(invoiceDto,invoiceType);
+
     }
 
 }
