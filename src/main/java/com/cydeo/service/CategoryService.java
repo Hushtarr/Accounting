@@ -10,4 +10,5 @@ public interface CategoryService {
     List<CategoryDto> listCategoryByCompany();
     void save(CategoryDto dto);
     void update(CategoryDto dto);
+    boolean isDescriptionUnique(Long id, String description, Long excludeCategoryId);
 }
