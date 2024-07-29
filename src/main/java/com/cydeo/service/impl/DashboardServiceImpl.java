@@ -1,7 +1,6 @@
 package com.cydeo.service.impl;
 
-import com.cydeo.dto.InvoiceDto;
-import com.cydeo.dto.InvoiceProductDto;
+
 import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.repository.InvoiceProductRepository;
@@ -11,7 +10,6 @@ import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,31 +45,6 @@ public class DashboardServiceImpl implements DashboardService {
     public BigDecimal getTotalProfit_Loss() {
         return getTotalSales().subtract(getTotalCost());
     }
-
-    @Override
-    public List<InvoiceDto> getTransaction() {
-        List<InvoiceProductDto> IPlist=repository.findAll()
-                .stream()
-                .map(i -> mapperUtil.convert(i,new InvoiceProductDto()))
-                .toList();
-
-        List<InvoiceDto>Ilist=new ArrayList<>();
-        for (InvoiceProductDto invoice:IPlist){
-            int quantity= invoice.getQuantity();
-            BigDecimal price = invoice.getPrice();
-            BigDecimal total=BigDecimal.valueOf(quantity).multiply(price);
-            BigDecimal tax= BigDecimal.valueOf(invoice.getTax());
-            invoice.getInvoice().setTotal(total);
-            invoice.getInvoice().setTax(tax);
-            invoice.getInvoice().setPrice(price);
-            Ilist.add(invoice.getInvoice());
-        }
-
-            return Ilist.subList(Ilist.size()-3,Ilist.size());
-    }
-
-
-
 
     public List<InvoiceProduct> listAllByInvoiceType (InvoiceType invoiceType){
         return repository.findAll()

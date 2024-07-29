@@ -29,8 +29,6 @@ public class DashbordController {
         summaryNumbers.put("profitLoss", dashboardService.getTotalProfit_Loss());
 
         model.addAttribute("summaryNumbers", summaryNumbers);
-        model.addAttribute("invoices", dashboardService.getTransaction());
-        //model.addAttribute("exchangeRates", dashboardService.exchangeForUsd());
 
         return "/dashboard";
 
