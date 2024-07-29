@@ -24,13 +24,15 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     private final SecurityService securityService;
     private final InvoiceService invoiceService;
     private final AddressService addressService;
+    private final CompanyService companyService;
 
-    public ClientVendorServiceImpl(AddressService addressService, ClientVendorRepository clientVendorRepository, MapperUtil mapperUtil, SecurityService securityService, InvoiceService invoiceService) {
+    public ClientVendorServiceImpl(AddressService addressService, CompanyService companyService,ClientVendorRepository clientVendorRepository, MapperUtil mapperUtil, SecurityService securityService, InvoiceService invoiceService) {
         this.clientVendorRepository = clientVendorRepository;
         this.mapperUtil = mapperUtil;
         this.addressService = addressService;
         this.securityService = securityService;
         this.invoiceService = invoiceService;
+        this.companyService = companyService;
     }
 
     @Override
@@ -39,14 +41,15 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         return clientVendorList.stream().map(clientVendor -> mapperUtil.convert(clientVendor, new ClientVendorDto())).collect(Collectors.toList());
     }
     @Override
-    public void save(ClientVendorDto clientVendorDto) {
+    public ClientVendorDto save(ClientVendorDto clientVendorDto) {
+        clientVendorDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
         ClientVendor clientVendor = mapperUtil.convert(clientVendorDto, new ClientVendor());
-
         if (clientVendorDto.getAddress() != null) {
             Address address = addressService.save(clientVendorDto.getAddress());
             clientVendor.setAddress(address);
         }
         clientVendorRepository.save(clientVendor);
+        return mapperUtil.convert(clientVendor, new ClientVendorDto());
     }
     @Override
     public void update(ClientVendorDto clientVendorDto) {
