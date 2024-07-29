@@ -2,6 +2,7 @@ package com.cydeo.service.impl;
 
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
+import com.cydeo.dto.ProductDto;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Invoice;
 import com.cydeo.entity.InvoiceProduct;
@@ -11,6 +12,7 @@ import com.cydeo.repository.InvoiceRepository;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
+import com.cydeo.service.ProductService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
@@ -28,12 +30,14 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final MapperUtil mapperUtil;
     private final CompanyService companyService;
     private final InvoiceProductService invoiceProductService;
+    private final ProductService productService;
 
-    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, MapperUtil mapperUtil, CompanyService companyService, InvoiceProductService invoiceProductService) {
+    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, MapperUtil mapperUtil, CompanyService companyService, InvoiceProductService invoiceProductService, ProductService productService) {
         this.invoiceRepository = invoiceRepository;
         this.mapperUtil = mapperUtil;
         this.companyService = companyService;
         this.invoiceProductService = invoiceProductService;
+        this.productService = productService;
     }
 
     @Override
@@ -59,13 +63,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .stream()
                 .map(invoice -> {
                     InvoiceDto invoiceDto = mapperUtil.convert(invoice, new InvoiceDto());
-                    List<InvoiceProductDto> invoiceProductDtoList = invoiceProductService.listAllByInvoiceId(invoiceDto.getId());
-                    BigDecimal totalPrice = invoiceProductDtoList.stream().map(invoiceProductService::getInvoiceProductTotalWithoutTax).reduce(BigDecimal.ZERO,BigDecimal::add);
-                    BigDecimal totalWithTax = invoiceProductDtoList.stream().map(invoiceProductService::getInvoiceProductTotalWithTax).reduce(BigDecimal.ZERO,BigDecimal::add);
-                    BigDecimal totalTax = totalWithTax.subtract(totalPrice);
-                    invoiceDto.setPrice(totalPrice);
-                    invoiceDto.setTax(totalTax);
-                    invoiceDto.setTotal(totalWithTax);
+                    setPriceTaxAndTotal(invoiceDto);
                     return invoiceDto;
                 })
                 .toList();
@@ -139,12 +137,26 @@ public class InvoiceServiceImpl implements InvoiceService {
         if(invoiceDto.getInvoiceType().equals(InvoiceType.PURCHASE)) {
             List<InvoiceProductDto> invoiceProductDtos = invoiceProductService.listAllByInvoiceId(invoiceDto.getId());
             invoiceProductDtos.forEach(i -> {
-                i.getProduct().setQuantityInStock(i.getProduct().getQuantityInStock() + i.getQuantity());
+                ProductDto productDto = i.getProduct();
+                productDto.setQuantityInStock(i.getProduct().getQuantityInStock() + i.getQuantity());
+                productService.save(productDto);
                 mapperUtil.convert(i, new InvoiceProduct());
             });
         }
         save(invoiceDto,invoiceType);
 
     }
+
+    InvoiceDto setPriceTaxAndTotal(InvoiceDto invoiceDto){
+        List<InvoiceProductDto> invoiceProductDtoList = invoiceProductService.listAllByInvoiceId(invoiceDto.getId());
+        BigDecimal totalPrice = invoiceProductDtoList.stream().map(invoiceProductService::getInvoiceProductTotalWithoutTax).reduce(BigDecimal.ZERO,BigDecimal::add);
+        BigDecimal totalWithTax = invoiceProductDtoList.stream().map(invoiceProductService::getInvoiceProductTotalWithTax).reduce(BigDecimal.ZERO,BigDecimal::add);
+        BigDecimal totalTax = totalWithTax.subtract(totalPrice);
+        invoiceDto.setPrice(totalPrice);
+        invoiceDto.setTax(totalTax);
+        invoiceDto.setTotal(totalWithTax);
+        return invoiceDto;
+    }
+
 
 }
