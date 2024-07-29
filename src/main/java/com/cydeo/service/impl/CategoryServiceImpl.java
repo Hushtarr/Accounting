@@ -57,4 +57,14 @@ public class CategoryServiceImpl implements CategoryService {
         dto.setCompany(currentUsersCompany);
         categoryRepository.save(mapperUtil.convert(dto, new Category()));
     }
+
+    @Override
+    public boolean isDescriptionUnique(Long id, String description, Long excludeCategoryId) {
+        List<Category> categories = categoryRepository.findByCompanyIdOrderByDescriptionAsc(id);
+        return categories.stream()
+                .filter(category -> !category.getId().equals(excludeCategoryId))
+                .noneMatch(category -> category.getDescription().trim().equalsIgnoreCase(description.trim()));
+    }
+
+
 }
