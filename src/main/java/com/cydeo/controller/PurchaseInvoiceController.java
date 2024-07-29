@@ -93,7 +93,7 @@ public class PurchaseInvoiceController {
 
         model.addAttribute("invoice", invoiceService.findById(invoiceId));
         model.addAttribute("vendors", clientVendorService.listAllClientVendorsByType(ClientVendorType.VENDOR));
-        model.addAttribute("products", productService.findAllInStock());
+        model.addAttribute("products", productService.listProductsByCategoryAndName());
         model.addAttribute("newInvoiceProduct", new InvoiceProductDto());
         model.addAttribute("invoiceProducts", invoiceProductService.listAllByInvoiceId(invoiceId));
 
@@ -110,7 +110,7 @@ public class PurchaseInvoiceController {
 
         if (bindingResult.hasErrors()) {
 
-            model.addAttribute("products", productService.findAllInStock());
+            model.addAttribute("products", productService.listProductsByCategoryAndName());
             model.addAttribute("vendors", clientVendorService.listAllClientVendors());
             return "/invoice/purchase-invoice-update";
         }
@@ -128,7 +128,7 @@ public class PurchaseInvoiceController {
 
         if (bindingResult.hasErrors()) {
 
-            model.addAttribute("products", productService.findAllInStock());
+            model.addAttribute("products", productService.listProductsByCategoryAndName());
             model.addAttribute("vendors", clientVendorService.listAllClientVendors());
             model.addAttribute("invoice", invoiceService.findById(id));
             model.addAttribute("invoiceProducts", invoiceProductService.listAllByInvoiceId(id));
