@@ -45,7 +45,7 @@ public class PurchaseInvoiceController {
     @GetMapping("/delete/{id}")
     public String deleteInvoice(@PathVariable("id") Long id) {
          invoiceService.delete(id);
-         return "redirect:/invoice/purchase-invoice-create";
+         return "redirect:/purchaseInvoices/list";
     }
 
     @GetMapping("/list")
@@ -118,7 +118,7 @@ public class PurchaseInvoiceController {
 
         invoiceService.update(invoice);
 
-        return "redirect:/invoice/purchase-invoice-create";
+        return "redirect:/purchaseInvoices/list";
 
 
     }
