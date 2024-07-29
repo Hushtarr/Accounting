@@ -21,7 +21,7 @@ public class CompanyDto {
 
     @NotBlank(message = "Title is a required field")
     @Size(max = 100, min = 2, message = "Title must be between 2 and 100 characters long")
-    @UniqueElements( message = "This title already exists")
+ //   @UniqueElements( message = "This title already exists")
     private String title;
 
     @NotBlank(message = "Phone Number is a required field")
@@ -34,5 +34,6 @@ public class CompanyDto {
     @Valid
     @NotNull
     private AddressDto address;
+
     private CompanyStatus companyStatus;
 }
