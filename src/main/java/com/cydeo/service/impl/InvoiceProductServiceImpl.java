@@ -7,6 +7,8 @@ import com.cydeo.service.InvoiceProductService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Service
@@ -32,7 +34,11 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     @Override
     public List<InvoiceProductDto> listAllByInvoiceId(Long id) {
         return repository.findAllByInvoiceId(id).stream()
-                .map(invoiceProduct -> mapperUtil.convert(invoiceProduct, new InvoiceProductDto()))
+                .map(invoiceProduct -> {
+                    InvoiceProductDto invoiceProductDto = mapperUtil.convert(invoiceProduct, new InvoiceProductDto());
+                    invoiceProductDto.setTotal(getInvoiceProductTotalWithTax(invoiceProductDto));
+                    return invoiceProductDto;
+                })
                 .toList();
     }
 
@@ -48,5 +54,21 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         invoiceProduct.setIsDeleted(true);
         repository.save(invoiceProduct);
     }
+
+    @Override
+    public BigDecimal getInvoiceProductTotalWithTax(InvoiceProductDto invoiceProductDto) {
+
+        BigDecimal totalWithoutTax = getInvoiceProductTotalWithoutTax(invoiceProductDto);
+        BigDecimal tax = (totalWithoutTax.multiply(BigDecimal.valueOf(invoiceProductDto.getTax()))).divide(BigDecimal.valueOf(100), RoundingMode.DOWN);
+
+        return totalWithoutTax.add(tax);
+    }
+
+    @Override
+    public BigDecimal getInvoiceProductTotalWithoutTax(InvoiceProductDto invoiceProductDto) {
+
+        return invoiceProductDto.getPrice().multiply(BigDecimal.valueOf(invoiceProductDto.getQuantity()));
+    }
+
 
 }

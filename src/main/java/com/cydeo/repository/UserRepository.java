@@ -13,6 +13,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT CASE WHEN COUNT(u) = 1 THEN TRUE ELSE FALSE END FROM User u WHERE u.role.description = 'Admin' AND u.company.id = :companyId")
     boolean isOnlyAdminInCompany(@Param("companyId") Long companyId);
 
-    List<User> findByCompany_Id(Long companyId); // Add this method
+    List<User> findByCompany_Id(Long companyId);
+    List<User> findAllByRoleDescription(String roleDescription);
 
 }

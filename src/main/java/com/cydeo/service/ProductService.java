@@ -14,4 +14,5 @@ public interface ProductService {
     void update(ProductDto productDto);
     void delete(Long id);
     List<ProductDto> listAllProductsByCompanyId(Long id);
+    List<ProductDto> findAllInStock();
 }

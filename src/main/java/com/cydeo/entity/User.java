@@ -34,5 +34,9 @@ public class User extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
+
     private Company company;
+
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
 }
