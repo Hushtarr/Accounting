@@ -22,6 +22,7 @@ public class ProductServiceImpl implements ProductService {
     private final MapperUtil mapperUtil;
     private final CompanyService companyService;
 
+
     public ProductServiceImpl(ProductRepository productRepository, MapperUtil mapperUtil, CompanyService companyService) {
         this.productRepository = productRepository;
         this.mapperUtil = mapperUtil;
@@ -69,6 +70,13 @@ public class ProductServiceImpl implements ProductService {
         Product product = mapperUtil.convert(productDto,new Product());
         product.setCategory(mapperUtil.convert(productDto.getCategory(), new Category()));
         productRepository.save(product);
+    }
+
+    @Override
+    public void delete(Long id) {
+        Product deletedId = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        deletedId.setIsDeleted(true);
+        productRepository.save(deletedId);
     }
 
 

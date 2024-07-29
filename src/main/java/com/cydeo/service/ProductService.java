@@ -12,6 +12,7 @@ public interface ProductService {
     List<ProductDto> listProductsByCategoryAndName();
     void save(ProductDto productDto);
     void update(ProductDto productDto);
-
+    void delete(Long id);
+    List<ProductDto> listAllProductsByCompanyId(Long id);
     List<ProductDto> findAllInStock();
 }
