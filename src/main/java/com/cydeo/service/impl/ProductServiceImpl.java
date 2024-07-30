@@ -72,6 +72,7 @@ public class ProductServiceImpl implements ProductService {
         return products.stream()
                 .filter(product -> !product.getId().equals(excludeProductId))
                 .noneMatch(product -> product.getName().trim().equalsIgnoreCase(normalizedName.trim()));
+    }
 
     public void delete(Long id) {
         Product deletedId = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
