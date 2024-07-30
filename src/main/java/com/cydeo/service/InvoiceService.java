@@ -19,5 +19,6 @@ public interface InvoiceService {
 
     void approve(InvoiceDto invoiceDto, InvoiceType invoiceType);
     List<InvoiceDto> listTop3Approved(InvoiceStatus invoiceStatus);
+    InvoiceDto setPriceTaxAndTotal(InvoiceDto invoiceDto);
 
 }
