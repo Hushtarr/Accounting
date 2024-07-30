@@ -15,4 +15,5 @@ public interface ClientVendorService {
     void update(ClientVendorDto clientVendorDto);
     List<ClientVendorType> findAllTypes();
 
+    boolean existsByName(String clientVendorName);
 }

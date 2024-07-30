@@ -1,5 +1,6 @@
 package com.cydeo.repository;
 
+import com.cydeo.entity.Category;
 import com.cydeo.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,5 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByCompanyIdOrderByCategoryDescriptionAndProductNameAsc(@Param("companyId") Long companyId);
 
     List<Product> findByCategory_Company_IdAndQuantityInStockGreaterThan(Long id, int quantity);
+
+    List<Product> findByCategory(Category category);
 
 }
