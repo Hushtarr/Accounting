@@ -114,6 +114,7 @@ public class PurchaseInvoiceController {
             return "/invoice/purchase-invoice-update";
         }
         invoiceProductDto.setInvoice(invoiceService.findById(id));
+        invoiceProductDto.setId(null);
 
         invoiceProductService.save(invoiceProductDto);
 
