@@ -1,6 +1,7 @@
 package com.cydeo.service;
 
 import com.cydeo.dto.ProductDto;
+import com.cydeo.entity.Category;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface ProductService {
     void delete(Long id);
     List<ProductDto> listAllProductsByCompanyId(Long id);
     List<ProductDto> findAllInStock();
+    List<ProductDto> findAllByCategory(Category category);
+
 }
