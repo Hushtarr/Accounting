@@ -27,4 +27,6 @@ public interface CompanyService {
 
     void activateOrDeactivateUsers(Company company, boolean status);
 
+    boolean titleIsExist(String companyTitle);
+
 }
