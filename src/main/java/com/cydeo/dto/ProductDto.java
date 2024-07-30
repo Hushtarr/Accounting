@@ -3,6 +3,7 @@ package com.cydeo.dto;
 import com.cydeo.enums.ProductUnit;
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -19,6 +20,7 @@ public class ProductDto {
 
     @NotBlank(message = "Product Name is required field.")
     @Size(min = 2, max = 100, message = "Product Name must be between 2 and 100 characters long.")
+    @Column(unique = true, nullable = false)
     private String name;
 
     private Integer quantityInStock;
