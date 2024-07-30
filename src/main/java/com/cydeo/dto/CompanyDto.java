@@ -28,7 +28,7 @@ public class CompanyDto {
     @Pattern(regexp= "^(\\+\\d{1,2}\\s?)?1?\\-?\\.?\\s?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$", message= " can be in any valid phone number format")
     private String phone;
 
-    @Pattern(regexp = "^(https?:\\/\\/)?([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}(:\\d{1,5})?(\\/[a-zA-Z0-9\\.\\,\\?\\'\\/\\\\\\+&%\\$#_=~\\-]*)?$\n", message = "Website should have a valid format")
+    @Pattern(regexp = "^((https?|ftp|smtp):\\/\\/)?(www.)?[a-z0-9]+\\.[a-z]+(\\/[a-zA-Z0-9#]+\\/?)*$", message = "Website should have a valid format")
     private String website;
 
     @Valid
