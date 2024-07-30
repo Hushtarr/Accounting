@@ -89,6 +89,21 @@ public class ProductController {
 
     }
 
+    @GetMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable("id") Long id, Model model){
+        ProductDto productDto = productService.findById(id);
+        if (productDto.isHasInvoiceProduct() || productDto.getQuantityInStock()>0){
+            model.addAttribute("error", "Can not be deleted! This product has invoice(s).");
+            model.addAttribute("categories", categoryService.listCategoryByCompany());
+            model.addAttribute("productUnits", Arrays.asList(ProductUnit.values()));
+            return "redirect:/products/list";
+        }else{
+            productService.delete(id);
+        }
+
+        return "redirect:/products/list";
+    }
+
 
 
 

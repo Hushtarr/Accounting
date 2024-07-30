@@ -20,6 +20,7 @@ public class ProductServiceImpl implements ProductService {
     private final MapperUtil mapperUtil;
     private final CompanyService companyService;
 
+
     public ProductServiceImpl(ProductRepository productRepository, MapperUtil mapperUtil, CompanyService companyService) {
         this.productRepository = productRepository;
         this.mapperUtil = mapperUtil;
@@ -71,6 +72,18 @@ public class ProductServiceImpl implements ProductService {
         return products.stream()
                 .filter(product -> !product.getId().equals(excludeProductId))
                 .noneMatch(product -> product.getName().trim().equalsIgnoreCase(normalizedName.trim()));
+
+    public void delete(Long id) {
+        Product deletedId = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        deletedId.setIsDeleted(true);
+        productRepository.save(deletedId);
+    }
+
+    @Override
+    public List<ProductDto> listAllProductsByCompanyId(Long id) {
+        //todo Danilo there were no implementation
+        return List.of();
+
     }
 
 
@@ -79,6 +92,12 @@ public class ProductServiceImpl implements ProductService {
         Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
         List<Product> productsInStock = productRepository.findByCategory_Company_IdAndQuantityInStockGreaterThan(companyId, 0);
         return productsInStock.stream().map(product -> mapperUtil.convert(product, new ProductDto())).collect(Collectors.toList());
+    }
+    
+    @Override
+    public List<ProductDto> findAllByCategory(Category category) {
+        List<Product> productList = productRepository.findByCategory(category);
+        return productList.stream().map(product -> mapperUtil.convert(product, new ProductDto())).collect(Collectors.toList());
     }
 
 }

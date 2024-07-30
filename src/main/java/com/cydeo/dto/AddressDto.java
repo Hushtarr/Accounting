@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -36,8 +37,8 @@ public class AddressDto {
     @Size(min = 2,max = 50,message = "Country should have 2-50 characters long.")
     private String country;
 
-    @NotBlank(message = "Zipcode should have a valid form.")
-    @Pattern(regexp = "^\\d{5}-\\d{4}$")
+    @NotNull(message = "Zipcode should have a valid form.")
+    @Pattern(regexp = "^\\d{5}")
     private String zipCode;
 
 }
