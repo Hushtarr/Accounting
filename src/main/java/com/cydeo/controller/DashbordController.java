@@ -1,7 +1,9 @@
 package com.cydeo.controller;
 
 
+import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.service.DashboardService;
+import com.cydeo.service.InvoiceService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +17,11 @@ import java.util.Map;
 @RequestMapping("/dashboard")
 public class DashbordController {
     private final DashboardService dashboardService;
+    private final InvoiceService invoiceService;
 
-    public DashbordController(DashboardService dashboardService) {
+    public DashbordController(DashboardService dashboardService, InvoiceService invoiceService) {
         this.dashboardService = dashboardService;
+        this.invoiceService = invoiceService;
     }
 
     @GetMapping
@@ -29,8 +33,10 @@ public class DashbordController {
         summaryNumbers.put("profitLoss", dashboardService.getTotalProfit_Loss());
 
         model.addAttribute("summaryNumbers", summaryNumbers);
+        model.addAttribute("invoices", invoiceService.listTop3Approved(InvoiceStatus.APPROVED));
 
         return "/dashboard";
 
     }
+
 }

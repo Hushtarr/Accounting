@@ -2,6 +2,7 @@ package com.cydeo.service;
 
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.entity.ClientVendor;
+import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 
 import java.util.List;
@@ -17,5 +18,6 @@ public interface InvoiceService {
     List<InvoiceDto> listAllByClientVendor(ClientVendor clientVendor);
 
     void approve(InvoiceDto invoiceDto, InvoiceType invoiceType);
+    List<InvoiceDto> listTop3Approved(InvoiceStatus invoiceStatus);
 
 }
