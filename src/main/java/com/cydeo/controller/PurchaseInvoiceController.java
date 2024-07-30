@@ -24,7 +24,7 @@ public class PurchaseInvoiceController {
     private final ClientVendorService clientVendorService;
     private final ProductService productService;
 
-    public PurchaseInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService, ProductService productService, CompanyService companyService) {
+    public PurchaseInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService, ProductService productService) {
         this.invoiceService = invoiceService;
         this.invoiceProductService = invoiceProductService;
         this.clientVendorService = clientVendorService;
@@ -92,8 +92,7 @@ public class PurchaseInvoiceController {
 
     @PostMapping("/update/{id}")
     public String updateInvoice(@Valid @ModelAttribute("invoice") InvoiceDto invoice,
-                                BindingResult bindingResult, @PathVariable("id") Long id,
-                                Model model){
+                                BindingResult bindingResult, @PathVariable("id") Long id){
 
         if (bindingResult.hasErrors()) {
             return "/invoice/purchase-invoice-update";
