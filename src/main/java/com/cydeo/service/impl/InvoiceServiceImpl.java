@@ -6,7 +6,6 @@ import com.cydeo.dto.ProductDto;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Invoice;
 import com.cydeo.entity.InvoiceProduct;
-import com.cydeo.enums.CompanyStatus;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.repository.InvoiceRepository;
@@ -132,32 +131,25 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public void approve(InvoiceDto invoiceDto, InvoiceType invoiceType) {
-        invoiceDto.setInvoiceStatus(InvoiceStatus.APPROVED);
-        invoiceDto.setDate(LocalDateTime.now());
+        Invoice invoice = invoiceRepository.findById(invoiceDto.getId()).orElseThrow();
+        invoice.setInvoiceStatus(InvoiceStatus.APPROVED);
+        invoice.setDate(LocalDateTime.now());
+        invoiceRepository.save(invoice);
 
-        if(invoiceDto.getInvoiceType().equals(InvoiceType.PURCHASE)) {
-            List<InvoiceProductDto> invoiceProductDtos = invoiceProductService.listAllByInvoiceId(invoiceDto.getId());
+        List<InvoiceProductDto> invoiceProductDtos = invoiceProductService.listAllByInvoiceId(invoiceDto.getId());
+
+        if(invoice.getInvoiceType().equals(InvoiceType.PURCHASE)) {
             invoiceProductDtos.forEach(i -> {
+                InvoiceProduct invoiceProduct = mapperUtil.convert(invoiceProductService.findById(i.getId()),new InvoiceProduct());
+                invoiceProduct.setRemainingQuantity(i.getQuantity());
+                invoiceProductService.save(mapperUtil.convert(invoiceProduct, new InvoiceProductDto()));
                 ProductDto productDto = i.getProduct();
                 productDto.setQuantityInStock(i.getProduct().getQuantityInStock() + i.getQuantity());
                 productService.save(productDto);
-                mapperUtil.convert(i, new InvoiceProduct());
             });
         }
-        save(invoiceDto,invoiceType);
-
     }
 
-    InvoiceDto setPriceTaxAndTotal(InvoiceDto invoiceDto){
-        List<InvoiceProductDto> invoiceProductDtoList = invoiceProductService.listAllByInvoiceId(invoiceDto.getId());
-        BigDecimal totalPrice = invoiceProductDtoList.stream().map(invoiceProductService::getInvoiceProductTotalWithoutTax).reduce(BigDecimal.ZERO,BigDecimal::add);
-        BigDecimal totalWithTax = invoiceProductDtoList.stream().map(invoiceProductService::getInvoiceProductTotalWithTax).reduce(BigDecimal.ZERO,BigDecimal::add);
-        BigDecimal totalTax = totalWithTax.subtract(totalPrice);
-        invoiceDto.setPrice(totalPrice);
-        invoiceDto.setTax(totalTax);
-        invoiceDto.setTotal(totalWithTax);
-        return invoiceDto;
-    }
 
     @Override
     public List<InvoiceDto> listTop3Approved(InvoiceStatus status) {
@@ -167,8 +159,8 @@ public class InvoiceServiceImpl implements InvoiceService {
         return top3Approved.stream().map(each-> setPriceTaxAndTotal(mapperUtil.convert(each, new InvoiceDto()))).collect(Collectors.toList());
 
     }
-
-    InvoiceDto setPriceTaxAndTotal(InvoiceDto invoiceDto){
+    @Override
+    public InvoiceDto setPriceTaxAndTotal(InvoiceDto invoiceDto){
         List<InvoiceProductDto> invoiceProductDtoList = invoiceProductService.listAllByInvoiceId(invoiceDto.getId());
         BigDecimal totalPrice = invoiceProductDtoList.stream().map(invoiceProductService::getInvoiceProductTotalWithoutTax).reduce(BigDecimal.ZERO,BigDecimal::add);
         BigDecimal totalWithTax = invoiceProductDtoList.stream().map(invoiceProductService::getInvoiceProductTotalWithTax).reduce(BigDecimal.ZERO,BigDecimal::add);
@@ -178,6 +170,5 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceDto.setTotal(totalWithTax);
         return invoiceDto;
     }
-
 
 }
