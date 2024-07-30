@@ -108,5 +108,9 @@ public class CompanyServiceImpl implements CompanyService {
         });
     }
 
+    @Override
+    public boolean titleIsExist(String companyTitle) {
+    return  companyRepository.findByTitleIs(companyTitle)!=null;
+    }
 
 }
