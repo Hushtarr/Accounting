@@ -5,8 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
 
+import javax.persistence.UniqueConstraint;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -25,15 +29,16 @@ public class ClientVendorDto {
     @Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$")
     private String phone;
 
-    @Pattern(regexp = "^http(s{0,1})://[a-zA-Z0-9/\\-\\.]+.([A-Za-z/] {2,5})[a-zA-Z0-9/\\&\\?\\=\\-\\.\\~\\%]",
+    @Pattern(regexp = "^https?://[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)+(/[a-zA-Z0-9%&=?/.\\-_~#]*)?$",
             message = "Website should have a valid format.")
     private String website;
 
 
-    @NotBlank(message = "Please select type.")
+    @NotNull(message = "Please select type.")
     private ClientVendorType clientVendorType;
 
-
+    @Valid
+    @NotNull
     private AddressDto address;
     private CompanyDto company;
     private boolean hasInvoice;
