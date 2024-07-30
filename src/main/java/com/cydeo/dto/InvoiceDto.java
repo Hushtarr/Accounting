@@ -25,10 +25,7 @@ public class InvoiceDto {
 
     private InvoiceType invoiceType;
 
-
-//    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime date;
-
 
     private CompanyDto company;
 
