@@ -105,9 +105,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
         if(invoice.get().getInvoiceType().equals(InvoiceType.PURCHASE)){
             List<InvoiceProductDto> invoiceProductDtos = invoiceProductService.listAllByInvoiceId(invoice.get().getId());
-            invoiceProductDtos.forEach(ip->{
-                invoiceProductService.deleteById(ip.getId());
-            });
+            invoiceProductDtos.forEach(ip-> invoiceProductService.deleteById(ip.getId()));
         }
 
     }
