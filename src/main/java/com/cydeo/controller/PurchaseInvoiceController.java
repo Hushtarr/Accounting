@@ -59,8 +59,6 @@ public class PurchaseInvoiceController {
     @GetMapping("/create")
     public String createPurchaseInvoice(Model model) {
         model.addAttribute("newPurchaseInvoice", invoiceService.generateInvoiceForCompanyByType(InvoiceType.PURCHASE));
-        model.addAttribute("vendors", clientVendorService.listAllClientVendorsByType(ClientVendorType.VENDOR));
-
         return "/invoice/purchase-invoice-create";
     }
 
@@ -78,22 +76,11 @@ public class PurchaseInvoiceController {
     }
 
 
-
-
-
-
-    @ModelAttribute
-    public void commonAttributes(Model model) {
-        model.addAttribute("Title","Cydeo Accounting-Purchase_Invoice");
-    }
-
-    @GetMapping("/update/{invoiceId}")
-    public String editInvoice(@PathVariable("invoiceId") Long invoiceId, Model model){
+    @GetMapping("/update/{id}")
+    public String editInvoice(@PathVariable("id") Long invoiceId, Model model){
 
 
         model.addAttribute("invoice", invoiceService.findById(invoiceId));
-        model.addAttribute("vendors", clientVendorService.listAllClientVendorsByType(ClientVendorType.VENDOR));
-        model.addAttribute("products", productService.listProductsByCategoryAndName());
         model.addAttribute("newInvoiceProduct", new InvoiceProductDto());
         model.addAttribute("invoiceProducts", invoiceProductService.listAllByInvoiceId(invoiceId));
 
@@ -103,19 +90,14 @@ public class PurchaseInvoiceController {
 
     }
 
-    @PostMapping("/update")
+    @PostMapping("/update/{id}")
     public String updateInvoice(@Valid @ModelAttribute("invoice") InvoiceDto invoice,
-                                BindingResult bindingResult, @ModelAttribute("newInvoiceProduct") InvoiceProductDto newProduct,
+                                BindingResult bindingResult, @PathVariable("id") Long id,
                                 Model model){
 
         if (bindingResult.hasErrors()) {
-
-            model.addAttribute("products", productService.listProductsByCategoryAndName());
-            model.addAttribute("vendors", clientVendorService.listAllClientVendors());
             return "/invoice/purchase-invoice-update";
         }
-
-
         invoiceService.update(invoice);
 
         return "redirect:/purchaseInvoices/list";
@@ -128,8 +110,6 @@ public class PurchaseInvoiceController {
 
         if (bindingResult.hasErrors()) {
 
-            model.addAttribute("products", productService.listProductsByCategoryAndName());
-            model.addAttribute("vendors", clientVendorService.listAllClientVendors());
             model.addAttribute("invoice", invoiceService.findById(id));
             model.addAttribute("invoiceProducts", invoiceProductService.listAllByInvoiceId(id));
             return "/invoice/purchase-invoice-update";
@@ -148,6 +128,14 @@ public class PurchaseInvoiceController {
 
         return "redirect:/purchaseInvoices/update/"+invoiceid;
     }
+
+    @ModelAttribute
+    public void commonAttributes(Model model){
+        model.addAttribute("products", productService.listProductsByCategoryAndName());
+        model.addAttribute("vendors", clientVendorService.listAllClientVendorsByType(ClientVendorType.VENDOR));
+        model.addAttribute("title","Cydeo Accounting-Purchase Invoice");
+    }
+
 }
 
 
