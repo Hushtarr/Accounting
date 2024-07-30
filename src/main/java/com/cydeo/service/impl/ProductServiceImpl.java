@@ -74,6 +74,7 @@ public class ProductServiceImpl implements ProductService {
                 .noneMatch(product -> product.getName().trim().equalsIgnoreCase(normalizedName.trim()));
     }
 
+    @Override
     public void delete(Long id) {
         Product deletedId = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         deletedId.setIsDeleted(true);
