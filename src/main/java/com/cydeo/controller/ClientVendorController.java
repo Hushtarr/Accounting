@@ -4,7 +4,10 @@ import com.cydeo.dto.ClientVendorDto;
 import com.cydeo.service.ClientVendorService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 
 @Controller
@@ -30,7 +33,15 @@ public class ClientVendorController {
     }
 
     @PostMapping("/create")
-    public String saveClientVendor(@ModelAttribute("newClientVendor") ClientVendorDto clientVendorDto) {
+    public String saveClientVendor(@ModelAttribute("newClientVendor") @Valid ClientVendorDto clientVendorDto,BindingResult bindingResult,Model model) {
+        if (clientVendorService.existsByName(clientVendorDto.getClientVendorName())){
+            bindingResult.rejectValue("clientVendorName", "", "Client vendor already exists");
+        }
+
+        if (bindingResult.hasErrors()){
+            model.addAttribute("clientVendorTypes", clientVendorService.findAllTypes());
+            return "/clientVendor/clientVendor-create";
+        }
 
         clientVendorService.save(clientVendorDto);
         return "redirect:/clientVendors/list";

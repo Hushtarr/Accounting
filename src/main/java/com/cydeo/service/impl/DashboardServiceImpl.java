@@ -27,7 +27,7 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public BigDecimal getTotalCost() {
-        return listAllByInvoiceType(InvoiceType.PURCHASE)
+        return listAllByInvoice()
                 .stream()
                 .map(InvoiceProduct::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -35,9 +35,9 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public BigDecimal getTotalSales() {
-        return listAllByInvoiceType(InvoiceType.SALES)
+        return listAllByInvoice()
                 .stream()
-                .map(InvoiceProduct::getPrice)
+                .map(i->i.getPrice().multiply(BigDecimal.valueOf(i.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
@@ -52,6 +52,17 @@ public class DashboardServiceImpl implements DashboardService {
                 .filter(ip ->
                         ip.getInvoice().getCompany().getTitle().equals(companyService.getCompanyDtoByLoggedInUser().getTitle())
                         && ip.getInvoice().getInvoiceType().equals(invoiceType))
+                .map(ip->mapperUtil.convert(ip, new InvoiceProduct()))
+                .collect(Collectors.toList())
+                ;
+
+    }
+
+    public List<InvoiceProduct> listAllByInvoice (){
+        return repository.findAll()
+                .stream()
+                .filter(ip ->
+                        ip.getInvoice().getCompany().getTitle().equals(companyService.getCompanyDtoByLoggedInUser().getTitle()))
                 .map(ip->mapperUtil.convert(ip, new InvoiceProduct()))
                 .collect(Collectors.toList())
                 ;

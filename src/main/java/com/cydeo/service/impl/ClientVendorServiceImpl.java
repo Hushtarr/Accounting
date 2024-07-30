@@ -7,10 +7,12 @@ import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.Address;
 import com.cydeo.entity.ClientVendor;
+import com.cydeo.entity.User;
 import com.cydeo.enums.ClientVendorType;
 import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.service.*;
 import com.cydeo.util.MapperUtil;
+import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,6 +44,10 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     }
     @Override
     public ClientVendorDto save(ClientVendorDto clientVendorDto) {
+        if (existsByName(clientVendorDto.getClientVendorName())){
+            throw new IllegalArgumentException("Client/Vendor with this name already exists");
+        }
+
         clientVendorDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
         ClientVendor clientVendor = mapperUtil.convert(clientVendorDto, new ClientVendor());
         if (clientVendorDto.getAddress() != null) {
@@ -124,5 +130,10 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     public List<ClientVendorType> findAllTypes() {
         return List.of(ClientVendorType.CLIENT, ClientVendorType.VENDOR);
 
+    }
+
+    @Override
+    public boolean existsByName(String clientVendorName) {
+        return clientVendorRepository.existsByClientVendorName(clientVendorName);
     }
 }
