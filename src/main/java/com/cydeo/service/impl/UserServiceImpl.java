@@ -49,7 +49,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-        return mapperUtil.convert(user, new UserDto());
+        UserDto userDto = mapperUtil.convert(user, new UserDto());
+        userDto.setOnlyAdmin(isOnlyAdmin(userDto));
+        return userDto;
     }
 
     @Override
@@ -73,6 +75,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
 
         User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+
         user.setDeleted(true);
         userRepository.save(user);
     }
@@ -98,7 +101,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> findAllByRoleDescription(String role) {
         return userRepository.findAllByRoleDescription(role).stream()
-                .map(user -> mapperUtil.convert(user, new UserDto()))
+                .map(user -> {
+                    UserDto userDto = mapperUtil.convert(user, new UserDto());
+                    userDto.setOnlyAdmin(isOnlyAdmin(userDto));
+                    return userDto;
+                })
                 .sorted(Comparator.comparing(UserDto::getCompanyName)
                         .thenComparing(UserDto::getRoleDescription))
                 .collect(Collectors.toList());
