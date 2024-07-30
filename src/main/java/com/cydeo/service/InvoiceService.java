@@ -16,7 +16,6 @@ public interface InvoiceService {
     InvoiceDto generateInvoiceForCompanyByType(InvoiceType invoiceType);
     void update(InvoiceDto invoiceDto);
     List<InvoiceDto> listAllByClientVendor(ClientVendor clientVendor);
-
     void approve(InvoiceDto invoiceDto, InvoiceType invoiceType);
     List<InvoiceDto> listTop3Approved(InvoiceStatus invoiceStatus);
     InvoiceDto setPriceTaxAndTotal(InvoiceDto invoiceDto);
