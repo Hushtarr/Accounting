@@ -17,17 +17,14 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final MapperUtil mapperUtil;
-      private final CompanyService companyService;
+    private final CompanyService companyService;
     private final ProductService productService;
-    private final CategoryService categoryService;
 
-
-    public CategoryServiceImpl(CategoryRepository categoryRepository, MapperUtil mapperUtil, CompanyService companyService, ProductService productService, @Lazy CategoryService categoryService) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, MapperUtil mapperUtil, CompanyService companyService, ProductService productService) {
         this.categoryRepository = categoryRepository;
         this.mapperUtil = mapperUtil;
         this.companyService = companyService;
         this.productService = productService;
-        this.categoryService = categoryService;
     }
 
     @Override
