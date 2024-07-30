@@ -33,11 +33,6 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         return mapperUtil.convert(product,new ProductDto());
-
-    //        Optional<Product> product = productRepository.findById(id);
-    //        if (product.isPresent()) {
-    //            return mapperUtil.convert(product.get(), ProductDto.class);}
-
         }
 
     @Override
@@ -71,6 +66,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public boolean isNameUnique(Long categoryId, String name, Long excludeProductId) {
+        String normalizedName = name.trim().toLowerCase();
+        List<Product> products = productRepository.findByCategory_Id(categoryId);
+        return products.stream()
+                .filter(product -> !product.getId().equals(excludeProductId))
+                .noneMatch(product -> product.getName().trim().equalsIgnoreCase(normalizedName.trim()));
+    }
+
+    @Override
     public void delete(Long id) {
         Product deletedId = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         deletedId.setIsDeleted(true);
@@ -81,6 +85,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductDto> listAllProductsByCompanyId(Long id) {
         //todo Danilo there were no implementation
         return List.of();
+
     }
 
 
@@ -89,6 +94,12 @@ public class ProductServiceImpl implements ProductService {
         Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
         List<Product> productsInStock = productRepository.findByCategory_Company_IdAndQuantityInStockGreaterThan(companyId, 0);
         return productsInStock.stream().map(product -> mapperUtil.convert(product, new ProductDto())).collect(Collectors.toList());
+    }
+    
+    @Override
+    public List<ProductDto> findAllByCategory(Category category) {
+        List<Product> productList = productRepository.findByCategory(category);
+        return productList.stream().map(product -> mapperUtil.convert(product, new ProductDto())).collect(Collectors.toList());
     }
 
 }

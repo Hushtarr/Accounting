@@ -6,6 +6,7 @@ import com.cydeo.dto.ProductDto;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Invoice;
 import com.cydeo.entity.InvoiceProduct;
+import com.cydeo.enums.CompanyStatus;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.repository.InvoiceRepository;
@@ -144,6 +145,26 @@ public class InvoiceServiceImpl implements InvoiceService {
             });
         }
         save(invoiceDto,invoiceType);
+
+    }
+
+    InvoiceDto setPriceTaxAndTotal(InvoiceDto invoiceDto){
+        List<InvoiceProductDto> invoiceProductDtoList = invoiceProductService.listAllByInvoiceId(invoiceDto.getId());
+        BigDecimal totalPrice = invoiceProductDtoList.stream().map(invoiceProductService::getInvoiceProductTotalWithoutTax).reduce(BigDecimal.ZERO,BigDecimal::add);
+        BigDecimal totalWithTax = invoiceProductDtoList.stream().map(invoiceProductService::getInvoiceProductTotalWithTax).reduce(BigDecimal.ZERO,BigDecimal::add);
+        BigDecimal totalTax = totalWithTax.subtract(totalPrice);
+        invoiceDto.setPrice(totalPrice);
+        invoiceDto.setTax(totalTax);
+        invoiceDto.setTotal(totalWithTax);
+        return invoiceDto;
+    }
+
+    @Override
+    public List<InvoiceDto> listTop3Approved(InvoiceStatus status) {
+        String title = companyService.getCompanyDtoByLoggedInUser().getTitle();
+        List<Invoice> top3Approved = invoiceRepository.findTop3ByInvoiceStatusAndCompany_TitleOrderByDateDesc(InvoiceStatus.APPROVED, title);
+
+        return top3Approved.stream().map(each-> setPriceTaxAndTotal(mapperUtil.convert(each, new InvoiceDto()))).collect(Collectors.toList());
 
     }
 

@@ -33,6 +33,11 @@ public class CompanyController {
 
     @PostMapping("/create")
     public String insertCompany(@Valid  @ModelAttribute("newCompany") CompanyDto companyDto, BindingResult bindingResult, Model model){
+
+        if (companyService.titleIsExist(companyDto.getTitle())){
+            bindingResult.rejectValue("title", "error.title", "The company with this name is already exist");
+            return "/company/company-create";
+        }
         if (bindingResult.hasErrors()){
            return "/company/company-create";
         }
@@ -48,6 +53,10 @@ public class CompanyController {
 
     @PostMapping("/update/{id}")
     public String updateCompany(@Valid  @ModelAttribute("company") CompanyDto companyDto, BindingResult bindingResult){
+
+        if (companyService.titleIsExist(companyDto.getTitle())&& ! companyService.findById(companyDto.getId()).getTitle().equals(companyDto.getTitle())){
+            bindingResult.rejectValue("title", "error.title","The company with this name is already exist" );
+        }
         if (bindingResult.hasErrors()){
             return "/company/company-update";
         }
@@ -66,6 +75,8 @@ public class CompanyController {
         companyService.deactivateCompany(id);
         return "redirect:/companies/list";
     }
+
+
 
 
 }

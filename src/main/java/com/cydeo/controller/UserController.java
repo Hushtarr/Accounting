@@ -81,9 +81,6 @@ public class UserController {
         UserDto loggedInUser = securityService.getLoggedInUser();
         UserDto userDto = userService.findById(id);
 
-        boolean isOnlyAdmin = userService.isOnlyAdmin(userDto);
-        userDto.setOnlyAdmin(isOnlyAdmin);
-
         model.addAttribute("user", userDto);
         setRoleAndCompanyAttributes(model, loggedInUser);
         return "/user/user-update";
@@ -110,8 +107,6 @@ public class UserController {
             return "/user/user-update";
         }
 
-        boolean isOnlyAdmin = userService.isOnlyAdmin(userDto);
-        userDto.setOnlyAdmin(isOnlyAdmin);
 
         try {
             userService.update(userDto);
@@ -169,6 +164,8 @@ public class UserController {
         userService.deleteUser(id);
         return "redirect:/users/list";
     }
+
+
 
     public void setRoleAndCompanyAttributes(Model model, UserDto loggedInUser) {
         List<RoleDto> roles;
