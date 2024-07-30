@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
@@ -28,6 +29,8 @@ public class InvoiceProductDto {
     private BigDecimal profitLoss;
     private Integer remainingQuantity;
     private InvoiceDto invoice;
+    @Valid
+    @NotNull(message = "product name is required field")
     private ProductDto product;
 
 }
