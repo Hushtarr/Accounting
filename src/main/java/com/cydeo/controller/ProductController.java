@@ -27,8 +27,7 @@ public class ProductController {
 
     @GetMapping("/list")
     public String getProducts(Model model) {
-//        model.addAttribute(
-//                "products", productService.listAllProducts());
+//        model.addAttribute("products", productService.listAllProducts());
         model.addAttribute("products", productService.listProductsByCategoryAndName());
 
                 return "product/product-list";
@@ -52,6 +51,12 @@ public class ProductController {
             model.addAttribute("productUnits", Arrays.asList(ProductUnit.values()));
             return "product/product-create";
         }
+        if (!productService.isNameUnique(productDto.getCategory().getId(), productDto.getName(), null)){
+            bindingResult.rejectValue("name", "error.name", "This name already exists.");
+            model.addAttribute("categories", categoryService.listCategoryByCompany());
+            model.addAttribute("productUnits", Arrays.asList(ProductUnit.values()));
+            return "product/product-create";
+        }
         productService.save(productDto);
         return "redirect:/products/list";
     }
@@ -69,6 +74,12 @@ public class ProductController {
     @PostMapping("/update/{id}")
     public String updateProduct(@Valid @ModelAttribute("product") ProductDto productDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()){
+            model.addAttribute("categories", categoryService.listCategoryByCompany());
+            model.addAttribute("productUnits", Arrays.asList(ProductUnit.values()));
+            return "product/product-update";
+        }
+        if (!productService.isNameUnique(productDto.getCategory().getId(), productDto.getName(), null)){
+            bindingResult.rejectValue("name", "error.name", "This name already exists.");
             model.addAttribute("categories", categoryService.listCategoryByCompany());
             model.addAttribute("productUnits", Arrays.asList(ProductUnit.values()));
             return "product/product-update";

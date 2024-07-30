@@ -11,8 +11,6 @@ import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,11 +32,6 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         return mapperUtil.convert(product,new ProductDto());
-
-    //        Optional<Product> product = productRepository.findById(id);
-    //        if (product.isPresent()) {
-    //            return mapperUtil.convert(product.get(), ProductDto.class);}
-
         }
 
     @Override
@@ -71,6 +64,14 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
     }
 
+    @Override
+    public boolean isNameUnique(Long categoryId, String name, Long excludeProductId) {
+        String normalizedName = name.trim().toLowerCase();
+        List<Product> products = productRepository.findByCategory_Id(categoryId);
+        return products.stream()
+                .filter(product -> !product.getId().equals(excludeProductId))
+                .noneMatch(product -> product.getName().trim().equalsIgnoreCase(normalizedName.trim()));
+    }
 
 
     @Override

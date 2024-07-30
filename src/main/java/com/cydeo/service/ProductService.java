@@ -12,6 +12,7 @@ public interface ProductService {
     List<ProductDto> listProductsByCategoryAndName();
     void save(ProductDto productDto);
     void update(ProductDto productDto);
+    boolean isNameUnique(Long categoryId, String name, Long excludeProductId);
 
     List<ProductDto> findAllInStock();
 }
