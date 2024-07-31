@@ -86,17 +86,20 @@ public class SalesInvoiceController {
     }
 
     @PostMapping("/addInvoiceProduct/{id}")
-    public String addInvoiceProduct(@ModelAttribute("newInvoiceProduct") @Valid InvoiceProductDto invoiceProductDto, @PathVariable("id") Long id, Model model) {
+    public String addInvoiceProduct(@Valid @ModelAttribute("newInvoiceProduct") InvoiceProductDto invoiceProductDto, BindingResult bindingResult, @PathVariable("id") Long id, Model model) {
 
-        invoiceProductDto.setInvoice(invoiceService.findById(id));
+        if(bindingResult.hasErrors()) {
+
+            model.addAttribute("invoice", invoiceService.findById(id));
+            model.addAttribute("invoiceProducts", invoiceProductService.listAllByInvoiceId(id));
+            return "/invoice/purchase-invoice-update";
+
+        }
+      
         invoiceProductDto.setId(null);
-
+        invoiceProductDto.setInvoice(invoiceService.findById(id));
         invoiceProductService.save(invoiceProductDto);
-        model.addAttribute("invoice", invoiceService.findById(id));
-        model.addAttribute("newInvoiceProduct", new InvoiceProductDto());
-        model.addAttribute("invoiceProducts", invoiceProductService.listAllByInvoiceId(id));
-
-        return "/invoice/sales-invoice-update";
+        return "redirect:/salesInvoices/update/" +id;
 
     }
 
