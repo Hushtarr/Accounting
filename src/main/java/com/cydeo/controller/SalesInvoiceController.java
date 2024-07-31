@@ -89,6 +89,7 @@ public class SalesInvoiceController {
     public String addInvoiceProduct(@ModelAttribute("newInvoiceProduct") @Valid InvoiceProductDto invoiceProductDto, @PathVariable("id") Long id, Model model) {
 
         invoiceProductDto.setInvoice(invoiceService.findById(id));
+        invoiceProductDto.setId(null);
 
         invoiceProductService.save(invoiceProductDto);
         model.addAttribute("invoice", invoiceService.findById(id));
