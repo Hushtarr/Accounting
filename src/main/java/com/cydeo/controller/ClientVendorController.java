@@ -55,7 +55,15 @@ public class ClientVendorController {
         return "/clientVendor/clientVendor-update";
     }
     @PostMapping("/update/{id}")
-    public String updateClientVendor(@PathVariable("id") Long id, @ModelAttribute("newClientVendor") ClientVendorDto clientVendorDto) {
+    public String updateClientVendor(@PathVariable("id") Long id, @ModelAttribute("newClientVendor") ClientVendorDto clientVendorDto,BindingResult bindingResult,Model model) {
+        if (clientVendorService.existsByName(clientVendorDto.getClientVendorName())){
+            bindingResult.rejectValue("clientVendorName", "", "Client vendor already exists");
+        }
+
+        if (bindingResult.hasErrors()){
+            model.addAttribute("clientVendorTypes", clientVendorService.findAllTypes());
+            return "/clientVendor/clientVendor-create";
+        }
         clientVendorDto.setId(id);
         clientVendorService.update(clientVendorDto);
         return "redirect:/clientVendors/list";

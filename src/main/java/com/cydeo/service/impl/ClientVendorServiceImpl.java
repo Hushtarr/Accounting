@@ -44,10 +44,6 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     }
     @Override
     public ClientVendorDto save(ClientVendorDto clientVendorDto) {
-        if (existsByName(clientVendorDto.getClientVendorName())){
-            throw new IllegalArgumentException("Client/Vendor with this name already exists");
-        }
-
         clientVendorDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
         ClientVendor clientVendor = mapperUtil.convert(clientVendorDto, new ClientVendor());
         if (clientVendorDto.getAddress() != null) {

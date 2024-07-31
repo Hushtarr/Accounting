@@ -69,5 +69,15 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         return invoiceProductDto.getPrice().multiply(BigDecimal.valueOf(invoiceProductDto.getQuantity()));
     }
 
+    @Override
+    public List<InvoiceProductDto> findAllByInvoiceIdAndCalculateTotalPrice(Long invoiceId) {
+        return repository.findAllByInvoiceId(invoiceId).stream()
+                .map(invoiceProduct -> {
+                    InvoiceProductDto dto = mapperUtil.convert(invoiceProduct, new InvoiceProductDto());
+                    dto.setTotal(getInvoiceProductTotalWithTax(dto));
+                    return dto;
+                }).toList();
+    }
+
 
 }

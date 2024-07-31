@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
@@ -17,4 +18,8 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     List<Invoice> findByClientVendor(ClientVendor clientVendor);
     List<Invoice> findTop3ByInvoiceStatusAndCompany_TitleOrderByDateDesc(InvoiceStatus status, String title);
+
+    @Query(value = "SELECT i FROM Invoice i WHERE i.company.id = ?1 AND i.invoiceStatus = 'APPROVED' AND i.invoiceType = 'SALES'")
+    List<Invoice> findApprovedSalesInvoices(Long id);
 }
+

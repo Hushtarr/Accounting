@@ -37,8 +37,8 @@ public class AddressDto {
     @Size(min = 2,max = 50,message = "Country should have 2-50 characters long.")
     private String country;
 
-    @NotNull(message = "Zipcode should have a valid form.")
-    @Pattern(regexp = "^\\d{5}")
+    @NotBlank(message = "Zip Code is a required field.")
+    @Pattern(regexp = "^\\d{5}(-\\d{4})?$", message = "Please put in proper format example: (*****-****)")
     private String zipCode;
 
 }

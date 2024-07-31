@@ -5,6 +5,7 @@ import com.cydeo.entity.ClientVendor;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface InvoiceService {
@@ -19,5 +20,8 @@ public interface InvoiceService {
     void approve(InvoiceDto invoiceDto, InvoiceType invoiceType);
     List<InvoiceDto> listTop3Approved(InvoiceStatus invoiceStatus);
     InvoiceDto setPriceTaxAndTotal(InvoiceDto invoiceDto);
+
+    BigDecimal countTotal(InvoiceType invoiceType);
+    BigDecimal sumProfitLoss();
 
 }

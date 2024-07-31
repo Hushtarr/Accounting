@@ -25,8 +25,12 @@ public class ClientVendorDto {
     @Size(min = 2,max = 50,message = "Last Name must be between 2 and 50 characters long")
     private String clientVendorName;
 
-    @NotBlank(message = "Phone Number is required field and may be in any valid phone number format.")
-    @Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$")
+
+    @Pattern(regexp = "^(" +
+            "\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$" // +111 (202) 555-0125
+            + "|^(\\+\\d{1,3}( )?)?(\\d{3}[ ]?){2}\\d{3}$" //+1 (202) 555-0125
+            + "|^(\\+\\d{1,3}( )?)?(\\d{3}[ ]?)(\\d{2}[ ]?){2}\\d{2}$", // +111 123 456 789
+            message = "Phone Number is required field and may be in any valid phone number format.")
     private String phone;
 
     @Pattern(regexp = "^https?://[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)+(/[a-zA-Z0-9%&=?/.\\-_~#]*)?$",
