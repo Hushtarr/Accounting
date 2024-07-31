@@ -4,7 +4,6 @@ import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Invoice;
-import com.cydeo.enums.CompanyStatus;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.repository.InvoiceRepository;
@@ -145,6 +144,27 @@ public class InvoiceServiceImpl implements InvoiceService {
         List<Invoice> top3Approved = invoiceRepository.findTop3ByInvoiceStatusAndCompany_TitleOrderByDateDesc(InvoiceStatus.APPROVED, title);
 
         return top3Approved.stream().map(each-> setPriceTaxAndTotal(mapperUtil.convert(each, new InvoiceDto()))).collect(Collectors.toList());
+
+    }
+
+    @Override
+    public BigDecimal countTotal(InvoiceType invoiceType) {
+        return listAllByTypeAndCompany(invoiceType)
+                .stream()
+                .filter(invoiceDto -> invoiceDto.getInvoiceStatus().equals(InvoiceStatus.APPROVED))
+                .map(InvoiceDto::getTotal)
+                .reduce(BigDecimal.ZERO,BigDecimal::add);
+
+    }
+
+    @Override
+    public BigDecimal sumProfitLoss() {
+        return invoiceRepository.findApprovedSalesInvoices(companyService.getCompanyDtoByLoggedInUser().getId())
+                .stream()
+                .map(invoice -> invoiceProductService.findAllByInvoiceIdAndCalculateTotalPrice(invoice.getId())
+                        .stream()
+                        .map(InvoiceProductDto::getProfitLoss).reduce(BigDecimal::add).orElse(BigDecimal.ZERO))
+                .reduce(BigDecimal.ZERO,BigDecimal::add);
 
     }
 

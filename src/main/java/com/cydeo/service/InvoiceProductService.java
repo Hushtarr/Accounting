@@ -19,4 +19,5 @@ public interface InvoiceProductService {
     BigDecimal getInvoiceProductTotalWithTax(InvoiceProductDto invoiceProductDto);
     BigDecimal getInvoiceProductTotalWithoutTax(InvoiceProductDto invoiceProductDto);
 
+    List<InvoiceProductDto> findAllByInvoiceIdAndCalculateTotalPrice(Long invoiceId);
 }
