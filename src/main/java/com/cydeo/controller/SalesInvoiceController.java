@@ -95,10 +95,10 @@ public class SalesInvoiceController {
             return "/invoice/purchase-invoice-update";
 
         }
-
+      
+        invoiceProductDto.setId(null);
         invoiceProductDto.setInvoice(invoiceService.findById(id));
         invoiceProductService.save(invoiceProductDto);
-
         return "redirect:/salesInvoices/update/" +id;
 
     }
